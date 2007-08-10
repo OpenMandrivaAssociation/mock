@@ -9,7 +9,7 @@ URL: http://fedoraproject.org/wiki/Projects/Mock
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: python, yum >= 2.4
 Requires(pre): rpm-helper
-BuildRequires: libselinux-devel
+BuildRequires: selinux-devel
 
 %description
 Mock takes a srpm and builds it in a chroot
