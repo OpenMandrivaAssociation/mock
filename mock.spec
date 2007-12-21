@@ -6,6 +6,7 @@ License: GPL
 Group: Development/Other
 Source0: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
 URL: http://fedoraproject.org/wiki/Projects/Mock
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: python, yum >= 2.4
 Requires(pre): rpm-helper
 BuildRequires: selinux-devel
