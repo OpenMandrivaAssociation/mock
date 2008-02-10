@@ -1,67 +1,82 @@
+# next four lines substituted by autoconf
+%define major 0
+%define minor 9
+%define sub 7
+%define extralevel %{nil}
+%define release_name mock
+%define release_version %{major}.%{minor}.%{sub}%{extralevel}
+
 Summary: Builds packages inside chroots
 Name: mock
-Version: 0.7.4
-Release: %mkrel 2
-License: GPL
+Version: %{release_version}
+Release: %mkrel 1
+License: GPLv2+
 Group: Development/Other
-Source0: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
+Source: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
 URL: http://fedoraproject.org/wiki/Projects/Mock
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: python, yum >= 2.4
-Requires(pre): rpm-helper
-BuildRequires: selinux-devel
+BuildArch: noarch
+Requires: yum >= 2.4, tar, gzip, python-ctypes, python-decoratortools, usermode-consoleonly
+Requires(pre): shadow-utils
+%py_requires -d
 
 %description
 Mock takes a srpm and builds it in a chroot
 
 %prep
 %setup -q
-%{__sed} -i -e "s|/usr/bin|%{_bindir}|g;" -e "s|/usr/libexec|%{_libexecdir}|g;" Makefile
 
 %build
-%{make} CFLAGS="%{optflags}"
+%{configure2_5x}
+%{make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{makeinstall_std}
-# make the default.cfg link
-cd $RPM_BUILD_ROOT/%{_sysconfdir}/%{name}
+make DESTDIR=$RPM_BUILD_ROOT install
+mkdir -p $RPM_BUILD_ROOT%{_var}/lib/mock
+ln -s consolehelper $RPM_BUILD_ROOT/usr/bin/mock
 
-%if 0%{?fedora:1}
-if [ -f fedora-%{fedora}-%{_target_cpu}-core.cfg ]; then
-        ln -s fedora-%{fedora}-%{_target_cpu}-core.cfg default.cfg
-elif [ -f fedora-%{fedora}-%{_target_cpu}.cfg ]; then
-        ln -s fedora-%{fedora}-%{_target_cpu}.cfg default.cfg
-fi
+%if 0
+# compatibility symlinks
+# (probably be nuked in the future)
+pushd $RPM_BUILD_ROOT/etc/mock
+ln -s epel-4-i386.cfg   fedora-4-i386-epel.cfg
+ln -s epel-4-ppc.cfg    fedora-4-ppc-epel.cfg
+ln -s epel-4-x86_64.cfg fedora-4-x86_64-epel.cfg
+ln -s epel-5-i386.cfg   fedora-5-i386-epel.cfg
+ln -s epel-5-ppc.cfg    fedora-5-ppc-epel.cfg
+ln -s epel-5-x86_64.cfg fedora-5-x86_64-epel.cfg
+popd
 %endif
-
-# if we haven't created a default link yet, try to do so as devel
-if [ ! -f default.cfg ]; then
-    if [ -f fedora-development-%{_target_cpu}.cfg ]; then
-        ln -s fedora-development-%{_target_cpu}.cfg default.cfg
-    elif [ -f fedora-devel-%{_target_cpu}.cfg ]; then
-        ln -s fedora-devel-%{_target_cpu}.cfg default.cfg
-    elif [ -f fedora-development-i386.cfg ]; then
-        ln -s fedora-development-i386.cfg default.cfg
-    elif [ -f fedora-devel-i386.cfg ]; then
-        ln -s fedora-devel-i386.cfg default.cfg
-    fi
-fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%_pre_groupadd mock
+if [ $1 -eq 1 ]; then
+    groupadd -r mock >/dev/null 2>&1 || :
+fi
 
 %files
 %defattr(-, root, root)
-%doc README ChangeLog buildsys-build.spec
+
+# executables
+%{_bindir}/mock
+%attr(0755, root, root) %{_sbindir}/mock
+
+# python stuff
+%{python_sitelib}/*
+
+# config files
 %dir  %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*.cfg
-%{_bindir}/%{name}
-%{_libexecdir}/mock-yum
+%config(noreplace) %{_sysconfdir}/%{name}/*.ini
+%config(noreplace) %{_sysconfdir}/pam.d/%{name}
+%config(noreplace) %{_sysconfdir}/security/console.apps/%{name}
+
+# docs
 %{_mandir}/man1/mock.1*
-%attr(04750, root, mock) %{_sbindir}/mock-helper
-%attr(02775, root, mock) %dir /var/lib/mock
-%{_libdir}/libselinux-mock.so
+%doc ChangeLog
+
+# build dir
+%attr(02775, root, mock) %dir %{_var}/lib/mock
