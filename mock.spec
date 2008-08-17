@@ -1,7 +1,7 @@
 # next four lines substituted by autoconf
 %define major 0
 %define minor 9
-%define sub 7
+%define sub 10
 %define extralevel %{nil}
 %define release_name mock
 %define release_version %{major}.%{minor}.%{sub}%{extralevel}
@@ -9,7 +9,7 @@
 Summary: Builds packages inside chroots
 Name: mock
 Version: %{release_version}
-Release: %mkrel 3
+Release: %mkrel 1
 License: GPLv2+
 Group: Development/Other
 Source: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
