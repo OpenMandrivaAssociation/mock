@@ -9,14 +9,14 @@
 Summary: Builds packages inside chroots
 Name: mock
 Version: %{release_version}
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group: Development/Other
 Source: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
 URL: http://fedoraproject.org/wiki/Projects/Mock
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
-Requires: yum >= 2.4, tar, gzip, python-ctypes, python-decoratortools, usermode-consoleonly
+Requires: yum >= 2.4, tar, gzip, python-ctypes, python-decoratortools, python-iniparse, usermode-consoleonly
 Requires(pre): shadow-utils
 %py_requires -d
 
