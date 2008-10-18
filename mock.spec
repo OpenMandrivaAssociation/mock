@@ -1,7 +1,7 @@
 # next four lines substituted by autoconf
 %define major 0
 %define minor 9
-%define sub 10
+%define sub 12
 %define extralevel %{nil}
 %define release_name mock
 %define release_version %{major}.%{minor}.%{sub}%{extralevel}
@@ -9,10 +9,10 @@
 Summary: Builds packages inside chroots
 Name: mock
 Version: %{release_version}
-Release: %mkrel 2
+Release: %mkrel 1
 License: GPLv2+
 Group: Development/Other
-Source: http://fedoraproject.org/projects/mock/releases/%{name}-%{version}.tar.gz
+Source: https://fedorahosted.org/mock/attachment/wiki/MockTarballs/%{name}-%{version}.tar.gz
 URL: http://fedoraproject.org/wiki/Projects/Mock
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
@@ -39,13 +39,18 @@ ln -s consolehelper $RPM_BUILD_ROOT/usr/bin/mock
 %if 0
 # compatibility symlinks
 # (probably be nuked in the future)
-pushd $RPM_BUILD_ROOT/etc/mock
+pushd $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 ln -s epel-4-i386.cfg   fedora-4-i386-epel.cfg
 ln -s epel-4-ppc.cfg    fedora-4-ppc-epel.cfg
 ln -s epel-4-x86_64.cfg fedora-4-x86_64-epel.cfg
 ln -s epel-5-i386.cfg   fedora-5-i386-epel.cfg
 ln -s epel-5-ppc.cfg    fedora-5-ppc-epel.cfg
 ln -s epel-5-x86_64.cfg fedora-5-x86_64-epel.cfg
+# more compat, from devel/rawhide rename
+ln -s fedora-rawhide-i386.cfg fedora-devel-i386.cfg
+ln -s fedora-rawhide-x86_64.cfg fedora-devel-x86_64.cfg
+ln -s fedora-rawhide-ppc.cfg fedora-devel-ppc.cfg
+ln -s fedora-rawhide-ppc64.cfg fedora-devel-ppc64.cfg
 popd
 %endif
 
