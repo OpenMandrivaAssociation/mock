@@ -1,7 +1,7 @@
 # next four lines substituted by autoconf
 %define major 0
 %define minor 9
-%define sub 12
+%define sub 13
 %define extralevel %{nil}
 %define release_name mock
 %define release_version %{major}.%{minor}.%{sub}%{extralevel}
