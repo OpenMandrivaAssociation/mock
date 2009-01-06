@@ -9,7 +9,7 @@
 Summary: Builds packages inside chroots
 Name: mock
 Version: %{release_version}
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group: Development/Other
 Source: https://fedorahosted.org/mock/attachment/wiki/MockTarballs/%{name}-%{version}.tar.gz
