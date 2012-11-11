@@ -1,0 +1,515 @@
+From 48a27fcf10117fb636042a1276e3603fd4d2b7d3 Mon Sep 17 00:00:00 2001
+From: Dennis Gilmore <dennis@ausil.us>
+Date: Fri, 10 Aug 2012 08:19:55 -0500
+Subject: [PATCH] add f18 configs add missing s390 rawhide config
+
+---
+ etc/mock/fedora-18-arm.cfg       | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-armhfp.cfg    | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-i386.cfg      | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-ppc.cfg       | 51 ++++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-ppc64.cfg     | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-s390.cfg      | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-s390x.cfg     | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-18-x86_64.cfg    | 49 ++++++++++++++++++++++++++++++++++++++
+ etc/mock/fedora-rawhide-s390.cfg | 38 ++++++++++++++++++++++++++++++
+ 9 files changed, 432 insertions(+)
+ create mode 100644 etc/mock/fedora-18-arm.cfg
+ create mode 100644 etc/mock/fedora-18-armhfp.cfg
+ create mode 100644 etc/mock/fedora-18-i386.cfg
+ create mode 100644 etc/mock/fedora-18-ppc.cfg
+ create mode 100644 etc/mock/fedora-18-ppc64.cfg
+ create mode 100644 etc/mock/fedora-18-s390.cfg
+ create mode 100644 etc/mock/fedora-18-s390x.cfg
+ create mode 100644 etc/mock/fedora-18-x86_64.cfg
+ create mode 100644 etc/mock/fedora-rawhide-s390.cfg
+
+diff --git a/etc/mock/fedora-18-arm.cfg b/etc/mock/fedora-18-arm.cfg
+new file mode 100644
+index 0000000..982b856
+--- /dev/null
++++ b/etc/mock/fedora-18-arm.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-arm'
++config_opts['target_arch'] = 'armv5tel'
++config_opts['legal_host_arches'] = ('armv5tel', 'armv6l', 'armv7l')
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=arm
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=arm
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://arm.fedoraproject.org/repos/f18-build/latest/arm/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=arm
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=arm
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-armhfp.cfg b/etc/mock/fedora-18-armhfp.cfg
+new file mode 100644
+index 0000000..ccb900c
+--- /dev/null
++++ b/etc/mock/fedora-18-armhfp.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-armhfp'
++config_opts['target_arch'] = 'armv7hl'
++config_opts['legal_host_arches'] = ('armv7l')
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=armhfp
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=armhfp
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://arm.fedoraproject.org/repos/f18-build/latest/armhfp/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=armhfp
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=armhfp
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-i386.cfg b/etc/mock/fedora-18-i386.cfg
+new file mode 100644
+index 0000000..8913c37
+--- /dev/null
++++ b/etc/mock/fedora-18-i386.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-i386'
++config_opts['target_arch'] = 'i686'
++config_opts['legal_host_arches'] = ('i386', 'i586', 'i686', 'x86_64')
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=i386
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=i386
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://kojipkgs.fedoraproject.org/repos/f18-build/latest/i386/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=i386
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=i386
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-ppc.cfg b/etc/mock/fedora-18-ppc.cfg
+new file mode 100644
+index 0000000..201159c
+--- /dev/null
++++ b/etc/mock/fedora-18-ppc.cfg
+@@ -0,0 +1,51 @@
++config_opts['root'] = 'fedora-18-ppc'
++config_opts['target_arch'] = 'ppc'
++config_opts['legal_host_arches'] = ('ppc', 'ppc64')
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++#exclude=*.ppc64
++# The above is not needed anymore with yum multilib policy of "best" which is the default in Fedora.
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=ppc
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=ppc
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://kojipkgs.fedoraproject.org/repos/f18-build/latest/ppc/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=ppc
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=ppc
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-ppc64.cfg b/etc/mock/fedora-18-ppc64.cfg
+new file mode 100644
+index 0000000..10e314e
+--- /dev/null
++++ b/etc/mock/fedora-18-ppc64.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-ppc64'
++config_opts['target_arch'] = 'ppc64'
++config_opts['legal_host_arches'] = ('ppc64',)
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=ppc64
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=ppc64
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://kojipkgs.fedoraproject.org/repos/f18-build/latest/ppc64/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=ppc64
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=ppc64
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-s390.cfg b/etc/mock/fedora-18-s390.cfg
+new file mode 100644
+index 0000000..3fd8887
+--- /dev/null
++++ b/etc/mock/fedora-18-s390.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-s390'
++config_opts['target_arch'] = 's390'
++config_opts['legal_host_arches'] = ('s390x', 's390')
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=s390
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=s390
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://s390.koji.fedoraproject.org/repos/f18-build/latest/s390/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=s390
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=s390
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-s390x.cfg b/etc/mock/fedora-18-s390x.cfg
+new file mode 100644
+index 0000000..9c305f4
+--- /dev/null
++++ b/etc/mock/fedora-18-s390x.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-s390x'
++config_opts['target_arch'] = 's390x'
++config_opts['legal_host_arches'] = ('s390x',)
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=s390x
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=s390x
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://s390.koji.fedoraproject.org/repos/f18-build/latest/s390x/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=s390x
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=s390x
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-18-x86_64.cfg b/etc/mock/fedora-18-x86_64.cfg
+new file mode 100644
+index 0000000..f0555ea
+--- /dev/null
++++ b/etc/mock/fedora-18-x86_64.cfg
+@@ -0,0 +1,49 @@
++config_opts['root'] = 'fedora-18-x86_64'
++config_opts['target_arch'] = 'x86_64'
++config_opts['legal_host_arches'] = ('x86_64',)
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'fc18'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-18&arch=x86_64
++failovermethod=priority
++
++[updates-released]
++name=updates
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f18&arch=x86_64
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://kojipkgs.fedoraproject.org/repos/f18-build/latest/x86_64/
++cost=2000
++enabled=0
++
++[fedora-debug]
++name=fedora-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-debug-18&arch=x86_64
++failovermethod=priority
++enabled=0
++
++[updates-debug]
++name=updates-debug
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-debug-f18&arch=x86_64
++failovermethod=priority
++enabled=0
++"""
+diff --git a/etc/mock/fedora-rawhide-s390.cfg b/etc/mock/fedora-rawhide-s390.cfg
+new file mode 100644
+index 0000000..012bb79
+--- /dev/null
++++ b/etc/mock/fedora-rawhide-s390.cfg
+@@ -0,0 +1,38 @@
++config_opts['root'] = 'fedora-rawhide-s390'
++config_opts['target_arch'] = 's390'
++config_opts['legal_host_arches'] = ('s390',)
++config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
++config_opts['dist'] = 'rawhide'  # only useful for --resultdir variable subst
++
++config_opts['yum.conf'] = """
++[main]
++cachedir=/var/cache/yum
++debuglevel=1
++reposdir=/dev/null
++logfile=/var/log/yum.log
++retries=20
++obsoletes=1
++gpgcheck=0
++assumeyes=1
++syslog_ident=mock
++syslog_device=
++
++# repos
++
++[fedora]
++name=fedora
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=rawhide&arch=s390
++failovermethod=priority
++
++[local]
++name=local
++baseurl=http://s390.koji.fedoraproject.org/repos/rawhide/latest/s390/
++cost=2000
++enabled=0
++
++[debug]
++name=Fedora Rawhide - s390 - Debug
++failovermethod=priority
++mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=rawhide-debug&arch=s390
++enabled=0
++"""
+-- 
+1.7.11.2
+
