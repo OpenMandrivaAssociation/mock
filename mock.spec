@@ -115,3 +115,65 @@ chmod 2775 %{_var}/cache/mock
 %defattr(0775, root, mock, 02775)
 %dir /var/cache/mock
 %dir /var/lib/mock
+
+
+%changelog
+* Tue Aug 28 2012 Paulo Andrade <pcpa@mandriva.com.br> 1.1.26-1
++ Revision: 815929
+- Update to latest upstream release.
+
+* Tue Nov 02 2010 Michael Scherer <misc@mandriva.org> 0.9.14-3mdv2011.0
++ Revision: 592412
+- rebuild for python 2.7
+
+* Mon Sep 14 2009 Thierry Vignaud <tv@mandriva.org> 0.9.14-2mdv2010.0
++ Revision: 440053
+- rebuild
+
+* Wed Feb 18 2009 Jérôme Soyer <saispo@mandriva.org> 0.9.14-1mdv2009.1
++ Revision: 342373
+- New upstream release
+
+* Tue Jan 06 2009 Funda Wang <fwang@mandriva.org> 0.9.13-2mdv2009.1
++ Revision: 325765
+- rebuild
+
+* Mon Nov 10 2008 David Walluck <walluck@mandriva.org> 0.9.13-1mdv2009.1
++ Revision: 301879
+- 0.9.13
+
+* Sat Oct 18 2008 David Walluck <walluck@mandriva.org> 0.9.12-1mdv2009.1
++ Revision: 295157
+- 0.9.12
+
+* Mon Aug 18 2008 David Walluck <walluck@mandriva.org> 0.9.10-2mdv2009.0
++ Revision: 273345
+- Requires: python-iniparse
+
+* Sun Aug 17 2008 David Walluck <walluck@mandriva.org> 0.9.10-1mdv2009.0
++ Revision: 272850
+- 0.9.10
+
+* Tue Jul 29 2008 Thierry Vignaud <tv@mandriva.org> 0.9.7-3mdv2009.0
++ Revision: 252670
+- rebuild
+
+* Mon Feb 11 2008 David Walluck <walluck@mandriva.org> 0.9.7-1mdv2008.1
++ Revision: 165006
+- 0.9.7
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Wed Sep 19 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.4-2mdv2008.0
++ Revision: 89947
+- rebuild
+
+* Sat Aug 11 2007 David Walluck <walluck@mandriva.org> 0.7.4-1mdv2008.0
++ Revision: 61853
+- change selinux BuildRequires
+- Import mock
+
