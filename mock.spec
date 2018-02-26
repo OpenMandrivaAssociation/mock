@@ -1,179 +1,203 @@
-# next four lines substituted by autoconf
-%define major 1
-%define minor 1
-%define sub 26
-%define extralevel %{nil}
-%define release_name mock
-%define release_version %{major}.%{minor}.%{sub}%{extralevel}
+# WARNING: This package is synchronized with Mageia and Fedora!
+
+# mock group id allocate from Fedora
+%global mockgid 135
+
+# Fedora release numbers are part of upstream releases
+%global origrel 1
 
 Summary: Builds packages inside chroots
 Name: mock
-Version: %{release_version}
-Release: 2
-License: GPLv2+
 Group: Development/Other
-Source: https://git.fedorahosted.org/cgit/mock.git/snapshot/%{name}-%{version}.tar.gz
-Patch0: 0001-add-f18-configs.patch
-URL: http://fedoraproject.org/wiki/Projects/Mock
+Version: 1.4.9
+Release: 1
+License: GPLv2+
+URL: https://github.com/rpm-software-management/mock/
+# Source is created by
+# git clone https://github.com/rpm-software-management/mock.git
+# cd mock
+# git reset --hard %{name}-%{version}-%{origrel}
+# tito build --tgz
+Source: %{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
+
 BuildArch: noarch
-Requires: yum >= 2.4, tar, gzip, pigz, python-ctypes, python-decoratortools, python-iniparse, usermode
-Requires: createrepo
-Requires(pre): shadow-utils
-Requires(post): coreutils
-%py_requires -d
+
+Requires: tar
+Requires: pigz
+Requires: usermode-consoleonly
+
+Requires: createrepo_c
+
+# Not yet available
+#Requires: mock-core-configs >= 28.2
+
+Requires: systemd
+
+BuildRequires: autoconf, automake
+BuildRequires: bash-completion
+
+Requires: python
+Requires: python-distro
+Requires: python-six >= 1.4.0
+Requires: python-requests
+Requires: python-rpm
+Requires: python-pyroute2
+BuildRequires: python-devel
+
+#check
+BuildRequires: python-pylint
+BuildRequires: python-requests
+BuildRequires: python-distro
+BuildRequires: python-six >= 1.4.0
+BuildRequires: python-rpm
+BuildRequires: python-pyroute2
+
+# We need these for the Mageia targets
+Requires: dnf
+Requires: dnf-plugins-core
+
+# For EPEL targets
+Recommends: dnf-yum
+Recommends: dnf-utils
+
+Recommends: btrfs-progs
+BuildRequires: perl
+
+# hwinfo plugin
+Requires: util-linux
+Requires: coreutils
+Requires: procps-ng
+
 
 %description
-Mock takes a srpm and builds it in a chroot
+Mock takes an SRPM and builds it in a chroot.
+
+%package scm
+Summary: Mock SCM integration module
+Group: Development/Other
+Requires: %{name} = %{version}-%{release}
+Requires: cvs
+Requires: git
+Requires: subversion
+Requires: tar
+
+%description scm
+Mock SCM integration module.
+
+%package lvm
+Summary: LVM plugin for mock
+Group: Development/Other
+Requires: %{name} = %{version}-%{release}
+Requires: lvm2
+
+%description lvm
+Mock plugin that enables using LVM as a backend and support creating snapshots
+of the buildroot.
 
 %prep
-%setup -q
-%patch0 -p1
+%autosetup -p1
+
+for file in py/mock.py py/mockchain.py; do
+  sed -i 1"s|#!/usr/bin/python |#!%{__python} |" $file
+done
 
 %build
-%configure
-make
+for i in py/mock.py py/mockchain.py; do
+    perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="%{version}"|' $i
+    perl -p -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR="%{_sysconfdir}"|' $i
+    perl -p -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR="%{python_sitelib}"|' $i
+    perl -p -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR="%{python_sitelib}/mockbuild"|' $i
+done
+for i in docs/mockchain.1 docs/mock.1; do
+    perl -p -i -e 's|"@VERSION@"|"%{version}"|' $i
+done
+
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install
-mkdir -p $RPM_BUILD_ROOT%{_var}/lib/mock
-mkdir -p $RPM_BUILD_ROOT%{_var}/cache/mock
-ln -s consolehelper $RPM_BUILD_ROOT%{_bindir}/mock
+install -d %{buildroot}%{_bindir}
+install -d %{buildroot}%{_libexecdir}/mock
+install py/mockchain.py %{buildroot}%{_bindir}/mockchain
+install py/mock.py %{buildroot}%{_libexecdir}/mock/mock
+ln -s consolehelper %{buildroot}%{_bindir}/mock
+install create_default_route_in_container.sh %{buildroot}%{_libexecdir}/mock/
 
-%if 0
-# compatibility symlinks
-# (probably be nuked in the future)
-pushd $RPM_BUILD_ROOT/etc/mock
-ln -s epel-5-i386.cfg   fedora-5-i386-epel.cfg
-ln -s epel-5-ppc.cfg    fedora-5-ppc-epel.cfg
-ln -s epel-5-x86_64.cfg fedora-5-x86_64-epel.cfg
-# more compat, from devel/rawhide rename
-ln -s fedora-rawhide-i386.cfg fedora-devel-i386.cfg
-ln -s fedora-rawhide-x86_64.cfg fedora-devel-x86_64.cfg
-ln -s fedora-rawhide-ppc.cfg fedora-devel-ppc.cfg
-ln -s fedora-rawhide-ppc64.cfg fedora-devel-ppc64.cfg
-popd
-%endif
-echo "%defattr(0644, root, mock)" > %{name}.cfgs
-find $RPM_BUILD_ROOT%{_sysconfdir}/mock -name "*.cfg" \
-    | sed -e "s|^$RPM_BUILD_ROOT|%%config(noreplace) |" >> %{name}.cfgs
+install -d %{buildroot}%{_sysconfdir}/pam.d
+cp -a etc/pam/* %{buildroot}%{_sysconfdir}/pam.d/
 
-# just for %%ghosting purposes
-ln -s fedora-rawhide-x86_64.cfg $RPM_BUILD_ROOT%{_sysconfdir}/mock/default.cfg
+install -d %{buildroot}%{_sysconfdir}/mock
+cp -a etc/mock/* %{buildroot}%{_sysconfdir}/mock/
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -d %{buildroot}%{_sysconfdir}/security/console.apps/
+cp -a etc/consolehelper/mock %{buildroot}%{_sysconfdir}/security/console.apps/%{name}
 
-%pre
-if [ $1 -eq 1 ]; then
-    groupadd -r mock >/dev/null 2>&1 || :
-fi
+install -d %{buildroot}%{_datadir}/bash-completion/completions/
+cp -a etc/bash_completion.d/* %{buildroot}%{_datadir}/bash-completion/completions/
+ln -s mock %{buildroot}%{_datadir}/bash-completion/completions/mockchain
 
-%post
-# TODO: use dist and version of install system, not build one
-if [ ! -e %{_sysconfdir}/%{name}/default.cfg ] ; then
-    # in case of dangling symlink
-    rm -f %{_sysconfdir}/%{name}/default.cfg
-    arch=$(uname -i)
-    for ver in %{?fedora}%{?rhel} rawhide ; do
-        cfg=%{?fedora:fedora}%{?rhel:epel}-$ver-$arch.cfg
-        if [ -e %{_sysconfdir}/%{name}/$cfg ] ; then
-            ln -s -f $cfg %{_sysconfdir}/%{name}/default.cfg
-            exit 0
-        fi
-    done
-fi
-# fix cache permissions from old installs
-chmod 2775 %{_var}/cache/mock
-:
+install -d %{buildroot}%{_sysconfdir}/pki/mock
+cp -a etc/pki/* %{buildroot}%{_sysconfdir}/pki/mock/
 
-%files -f %{name}.cfgs
+install -d %{buildroot}%{python_sitelib}/
+cp -a py/mockbuild %{buildroot}%{python_sitelib}/
+
+install -d %{buildroot}%{_mandir}/man1
+cp -a docs/mockchain.1 docs/mock.1 %{buildroot}%{_mandir}/man1/
+
+install -d %{buildroot}/var/lib/mock
+install -d %{buildroot}/var/cache/mock
+
+
+%check
+# ignore the errors for now, just print them and hopefully somebody will fix it one day
+python3-pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
+
+
+%files
+%defattr(0644, root, mock)
+%config(noreplace) %{_sysconfdir}/mock/site-defaults.cfg
+%{_datadir}/bash-completion/completions/mock
+%{_datadir}/bash-completion/completions/mockchain
+
 %defattr(-, root, root)
 
 # executables
 %{_bindir}/mock
 %{_bindir}/mockchain
-%attr(0755, root, root) %{_sbindir}/mock
+%{_libexecdir}/mock
 
 # python stuff
 %{python_sitelib}/*
-
+%exclude %{python_sitelib}/mockbuild/scm.*
+%exclude %{python_sitelib}/mockbuild/__pycache__/scm.*.py*
+%exclude %{python_sitelib}/mockbuild/plugins/lvm_root.*
+%exclude %{python_sitelib}/mockbuild/plugins/__pycache__/lvm_root.*.py*
 # config files
 %dir  %{_sysconfdir}/%{name}
-%ghost %config(noreplace,missingok) %{_sysconfdir}/%{name}/default.cfg
 %config(noreplace) %{_sysconfdir}/%{name}/*.ini
 %config(noreplace) %{_sysconfdir}/pam.d/%{name}
 %config(noreplace) %{_sysconfdir}/security/console.apps/%{name}
-%{_sysconfdir}/bash_completion.d
+
+# directory for personal gpg keys
+%dir %{_sysconfdir}/pki/mock
+%config(noreplace) %{_sysconfdir}/pki/mock/*
 
 # docs
-%{_mandir}/man1/mock.1*
-%{_mandir}/man1/mockchain.1*
-%doc ChangeLog
+%{_mandir}/man1/mock.1.*
+%{_mandir}/man1/mockchain.1.*
+
+# license
+%license COPYING
 
 # cache & build dirs
 %defattr(0775, root, mock, 02775)
-%dir /var/cache/mock
-%dir /var/lib/mock
+%dir %{_localstatedir}/cache/mock
+%dir %{_localstatedir}/lib/mock
 
+%files scm
+%{python_sitelib}/mockbuild/scm.py*
+%{python_sitelib}/mockbuild/__pycache__/scm.*.py*
 
-%changelog
-* Tue Aug 28 2012 Paulo Andrade <pcpa@mandriva.com.br> 1.1.26-1
-+ Revision: 815929
-- Update to latest upstream release.
-
-* Tue Nov 02 2010 Michael Scherer <misc@mandriva.org> 0.9.14-3mdv2011.0
-+ Revision: 592412
-- rebuild for python 2.7
-
-* Mon Sep 14 2009 Thierry Vignaud <tv@mandriva.org> 0.9.14-2mdv2010.0
-+ Revision: 440053
-- rebuild
-
-* Wed Feb 18 2009 Jérôme Soyer <saispo@mandriva.org> 0.9.14-1mdv2009.1
-+ Revision: 342373
-- New upstream release
-
-* Tue Jan 06 2009 Funda Wang <fwang@mandriva.org> 0.9.13-2mdv2009.1
-+ Revision: 325765
-- rebuild
-
-* Mon Nov 10 2008 David Walluck <walluck@mandriva.org> 0.9.13-1mdv2009.1
-+ Revision: 301879
-- 0.9.13
-
-* Sat Oct 18 2008 David Walluck <walluck@mandriva.org> 0.9.12-1mdv2009.1
-+ Revision: 295157
-- 0.9.12
-
-* Mon Aug 18 2008 David Walluck <walluck@mandriva.org> 0.9.10-2mdv2009.0
-+ Revision: 273345
-- Requires: python-iniparse
-
-* Sun Aug 17 2008 David Walluck <walluck@mandriva.org> 0.9.10-1mdv2009.0
-+ Revision: 272850
-- 0.9.10
-
-* Tue Jul 29 2008 Thierry Vignaud <tv@mandriva.org> 0.9.7-3mdv2009.0
-+ Revision: 252670
-- rebuild
-
-* Mon Feb 11 2008 David Walluck <walluck@mandriva.org> 0.9.7-1mdv2008.1
-+ Revision: 165006
-- 0.9.7
-
-  + Olivier Blin <blino@mandriva.org>
-    - restore BuildRoot
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill re-definition of %%buildroot on Pixel's request
-
-* Wed Sep 19 2007 Guillaume Rousse <guillomovitch@mandriva.org> 0.7.4-2mdv2008.0
-+ Revision: 89947
-- rebuild
-
-* Sat Aug 11 2007 David Walluck <walluck@mandriva.org> 0.7.4-1mdv2008.0
-+ Revision: 61853
-- change selinux BuildRequires
-- Import mock
+%files lvm
+%{python_sitelib}/mockbuild/plugins/lvm_root.*
+%{python_sitelib}/mockbuild/plugins/__pycache__/lvm_root.*.py*
 
