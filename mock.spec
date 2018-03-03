@@ -52,7 +52,7 @@ BuildRequires: python-six >= 1.4.0
 BuildRequires: python-rpm
 BuildRequires: python-pyroute2
 
-# We need these for the Mageia targets
+# We need these for the OpenMandriva targets
 Requires: dnf
 Requires: dnf-plugins-core
 
@@ -145,6 +145,14 @@ cp -a docs/mockchain.1 docs/mock.1 %{buildroot}%{_mandir}/man1/
 
 install -d %{buildroot}/var/lib/mock
 install -d %{buildroot}/var/cache/mock
+
+# Manually invoke byte compilation
+%py_compile %{buildroot}
+
+%pre
+# check for existence of mock group, create it if not found
+getent group mock > /dev/null || groupadd -f -g %mockgid -r mock
+exit 0
 
 
 %check
