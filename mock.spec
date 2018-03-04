@@ -1,3 +1,10 @@
+# (ngompa) disable rpmlint to avoid terrible cyclic dependency problem in rpm5->rpm4 + python2->python3 transition
+# remove after rpm5->rpm4 transition is complete
+%undefine _build_pkgcheck_set
+%undefine _build_pkgcheck_srpm
+%undefine _nonzero_exit_pkgcheck_terminate_build
+###
+
 # WARNING: This package is synchronized with Mageia and Fedora!
 
 # mock group id allocate from Fedora
@@ -6,89 +13,85 @@
 # Fedora release numbers are part of upstream releases
 %global origrel 1
 
-Summary: Builds packages inside chroots
-Name: mock
-Group: Development/Other
-Version: 1.4.9
-Release: 1
-License: GPLv2+
-URL: https://github.com/rpm-software-management/mock/
+Summary:	Builds packages inside chroots
+Name:		mock
+Version:	1.4.9
+Release:	1
+License:	GPLv2+
+Group:		Development/Other
+URL:		https://github.com/rpm-software-management/mock/
 # Source is created by
 # git clone https://github.com/rpm-software-management/mock.git
 # cd mock
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
-Source: %{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
-
-BuildArch: noarch
-
-Requires: tar
-Requires: pigz
-Requires: usermode-consoleonly
-
-Requires: createrepo_c
+Source:		%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
+BuildArch:	noarch
+Requires:	tar
+Requires:	pigz
+Requires:	usermode-consoleonly
+Requires:	createrepo_c
 
 # Not yet available
 #Requires: mock-core-configs >= 28.2
 
-Requires: systemd
+Requires:	systemd
 
-BuildRequires: autoconf, automake
-BuildRequires: bash-completion
-
-Requires: python
-Requires: python-distro
-Requires: python-six >= 1.4.0
-Requires: python-requests
-Requires: python-rpm
-Requires: python-pyroute2
-BuildRequires: python-devel
-
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	pkgconfig(bash-completion)
+BuildRequires: pkgconfig(python3)
+Requires:	python
+Requires:	python-distro
+Requires:	python-six >= 1.4.0
+Requires:	python-requests
+Requires:	python-rpm
+Requires:	python-pyroute2
 #check
-BuildRequires: python-pylint
-BuildRequires: python-requests
-BuildRequires: python-distro
-BuildRequires: python-six >= 1.4.0
-BuildRequires: python-rpm
-BuildRequires: python-pyroute2
+BuildRequires:	python-pylint
+BuildRequires:	python-requests
+BuildRequires:	python-distro
+BuildRequires:	python-six >= 1.4.0
+BuildRequires:	python-rpm
+BuildRequires:	python-pyroute2
 
 # We need these for the OpenMandriva targets
-Requires: dnf
-Requires: dnf-plugins-core
+Requires:	dnf
+Requires:	dnf-plugins-core
 
 # For EPEL targets
-Recommends: dnf-yum
-Recommends: dnf-utils
+Recommends:	dnf-yum
+Recommends:	dnf-utils
 
-Recommends: btrfs-progs
-BuildRequires: perl
+Recommends:	btrfs-progs
+BuildRequires:	perl
 
 # hwinfo plugin
-Requires: util-linux
-Requires: coreutils
-Requires: procps-ng
-
+Requires(pre):	util-linux
+Requires(pre):	coreutils
+Requires(pre):	shadow
+Requires:	procps-ng
 
 %description
 Mock takes an SRPM and builds it in a chroot.
 
 %package scm
-Summary: Mock SCM integration module
-Group: Development/Other
-Requires: %{name} = %{version}-%{release}
-Requires: cvs
-Requires: git
-Requires: subversion
-Requires: tar
+Summary:	Mock SCM integration module
+Group:		Development/Other
+Requires:	%{name} = %{version}-%{release}
+Requires:	cvs
+Requires:	git
+Requires:	subversion
+Requires:	tar
 
 %description scm
 Mock SCM integration module.
 
 %package lvm
-Summary: LVM plugin for mock
-Group: Development/Other
-Requires: %{name} = %{version}-%{release}
-Requires: lvm2
+Summary:	LVM plugin for mock
+Group:		Development/Other
+Requires:	%{name} = %{version}-%{release}
+Requires:	lvm2
 
 %description lvm
 Mock plugin that enables using LVM as a backend and support creating snapshots
@@ -154,11 +157,9 @@ install -d %{buildroot}/var/cache/mock
 getent group mock > /dev/null || groupadd -f -g %mockgid -r mock
 exit 0
 
-
 %check
 # ignore the errors for now, just print them and hopefully somebody will fix it one day
 python3-pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
-
 
 %files
 %defattr(0644, root, mock)
@@ -208,4 +209,3 @@ python3-pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
 %files lvm
 %{python_sitelib}/mockbuild/plugins/lvm_root.*
 %{python_sitelib}/mockbuild/plugins/__pycache__/lvm_root.*.py*
-
