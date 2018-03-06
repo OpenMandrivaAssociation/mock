@@ -29,6 +29,7 @@ Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{versio
 Patch0:		mock-1.4.9-bin-paths.patch
 Patch1:		mock-1.4.9-use-gtar.patch
 Patch2:		mock-1.4.9-no-use-compress-program.patch
+Patch3:		mock-1.4.9-result-path.patch
 BuildArch:	noarch
 Requires:	gnutar
 Requires:	pigz
