@@ -14,7 +14,7 @@
                          ["gtar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
                          self.compressArgs +
 -                        ["-cf", self.rootCacheFile,
-+                        ["caf", self.rootCacheFile,
++                        ["-caf", self.rootCacheFile,
                           "-C", self.buildroot.make_chroot_path()] +
                          self.exclude_tar_cmds + ["."],
                          shell=False
