@@ -1,0 +1,66 @@
+--- mock-1.4.9/py/mockbuild/plugins/hw_info.py.omv~	2018-03-06 16:11:07.342296880 +0100
++++ mock-1.4.9/py/mockbuild/plugins/hw_info.py	2018-03-06 16:11:25.414521316 +0100
+@@ -42,12 +42,12 @@ class HwInfo(object):
+         out.write("CPU info:\n")
+         out.write(output)
+ 
+-        cmd = ["/usr/bin/free"]
++        cmd = ["/bin/free"]
+         output = mockbuild.util.do(cmd, shell=False, returnOutput=True, raiseExc=False)
+         out.write("\n\nMemory:\n")
+         out.write(output)
+ 
+-        cmd = ["/usr/bin/df", "-H", self.buildroot.make_chroot_path()]
++        cmd = ["/bin/df", "-H", self.buildroot.make_chroot_path()]
+         output = mockbuild.util.do(cmd, shell=False, returnOutput=True, raiseExc=False)
+         out.write("\n\nStorage:\n")
+         out.write(output)
+--- mock-1.4.9/py/mockbuild/plugins/root_cache.py.omv~	2018-03-06 16:09:48.668320030 +0100
++++ mock-1.4.9/py/mockbuild/plugins/root_cache.py	2018-03-06 16:10:09.439577903 +0100
+@@ -35,7 +35,7 @@ class RootCache(object):
+         self.rootCacheFile = os.path.join(self.rootSharedCachePath, "cache.tar")
+         self.rootCacheLock = None
+         self.compressProgram = self.root_cache_opts['compress_program']
+-        if self.compressProgram == 'pigz' and not os.path.exists('/usr/bin/pigz'):
++        if self.compressProgram == 'pigz' and not os.path.exists('/bin/pigz'):
+             getLog().warning("specified 'pigz' as the root cache compress program but not available; using gzip")
+             self.compressProgram = 'gzip'
+         if self.compressProgram:
+--- mock-1.4.9/py/mockbuild/util.py.omv~	2018-03-06 16:16:27.234321984 +0100
++++ mock-1.4.9/py/mockbuild/util.py	2018-03-06 16:17:34.860396021 +0100
+@@ -199,7 +199,7 @@ def get_machinectl_uuid(chroot_path):
+     # we will ignore errors in machinectl, it sometimes fails for various errors (cannot find IP addr...)
+     # we do not care about exit code, we just want the output
+     # RHEL7 does not know --no-legend, so we must filter the legend out
+-    vm_list = _safe_check_output(["/usr/bin/machinectl", "list", "--no-pager"])
++    vm_list = _safe_check_output(["/bin/machinectl", "list", "--no-pager"])
+     if (isinstance(vm_list, bytes)):
+         vm_list = vm_list.decode("utf-8")
+     vm_list = '\n'.join(vm_list.split('\n')[1:-2])
+@@ -207,7 +207,7 @@ def get_machinectl_uuid(chroot_path):
+         if len(name) > 0:
+             m_uuid = name.split()[0]
+             try:
+-                vm_root = _safe_check_output(["/usr/bin/machinectl", "show", "-pRootDirectory", m_uuid])
++                vm_root = _safe_check_output(["/bin/machinectl", "show", "-pRootDirectory", m_uuid])
+                 if (isinstance(vm_root, bytes)):
+                     vm_root = vm_root.decode("utf-8")
+             except subprocess.CalledProcessError:
+@@ -237,7 +237,7 @@ def orphansKill(rootToKill):
+         m_uuid = get_machinectl_uuid(rootToKill)
+         if m_uuid:
+             getLog().warning("Machine %s still running. Killing...", m_uuid)
+-            os.system("/usr/bin/machinectl terminate %s" % m_uuid)
++            os.system("/bin/machinectl terminate %s" % m_uuid)
+ 
+ 
+ @traceLog()
+@@ -754,7 +754,7 @@ def clean_env():
+ 
+ 
+ def get_fs_type(path):
+-    cmd = ['/usr/bin/stat', '-f', '-L', '-c', '%T', path]
++    cmd = ['/bin/stat', '-f', '-L', '-c', '%T', path]
+     p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                          universal_newlines=True)
+     p.wait()
