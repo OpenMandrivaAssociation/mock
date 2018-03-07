@@ -1,5 +1,7 @@
---- mock-1.4.9/py/mockbuild/plugins/root_cache.py.omv~	2018-03-06 21:17:16.181113875 +0100
-+++ mock-1.4.9/py/mockbuild/plugins/root_cache.py	2018-03-06 21:23:37.616930340 +0100
+diff --git a/py/mockbuild/plugins/root_cache.py b/py/mockbuild/plugins/root_cache.py
+index f40bbdc..900660a 100644
+--- a/py/mockbuild/plugins/root_cache.py
++++ b/py/mockbuild/plugins/root_cache.py
 @@ -39,7 +39,7 @@ class RootCache(object):
              getLog().warning("specified 'pigz' as the root cache compress program but not available; using gzip")
              self.compressProgram = 'gzip'
@@ -9,9 +11,12 @@
              self.rootCacheFile = self.rootCacheFile + self.root_cache_opts['extension']
          else:
              self.compressArgs = []
-@@ -186,7 +186,7 @@ class RootCache(object):
+@@ -184,9 +184,9 @@ class RootCache(object):
+                 self.state.start("creating root cache")
+                 try:
                      mockbuild.util.do(
-                         ["tar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
+-                        ["tar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
++                        ["gtar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
                          self.compressArgs +
 -                        ["-cf", self.rootCacheFile,
 +                        ["-caf", self.rootCacheFile,
