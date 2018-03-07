@@ -27,6 +27,7 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
+# use gtar, and disable pigz/gzip
 Patch1:		mock-1.4.9-no-use-compress-program.patch
 Patch2:		mock-1.4.9-result-path.patch
 BuildArch:	noarch
@@ -43,7 +44,7 @@ Requires:	systemd
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	pkgconfig(bash-completion)
-BuildRequires: pkgconfig(python3)
+BuildRequires:  pkgconfig(python3)
 Requires:	python
 Requires:	python-distro
 Requires:	python-six >= 1.4.0
