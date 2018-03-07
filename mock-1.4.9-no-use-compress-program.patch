@@ -11,7 +11,7 @@
              self.compressArgs = []
 @@ -186,7 +186,7 @@ class RootCache(object):
                      mockbuild.util.do(
-                         ["gtar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
+                         ["tar", "--one-file-system", "--exclude-caches", "--exclude-caches-under"] +
                          self.compressArgs +
 -                        ["-cf", self.rootCacheFile,
 +                        ["-caf", self.rootCacheFile,
