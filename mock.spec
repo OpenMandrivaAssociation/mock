@@ -27,11 +27,10 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
-Patch1:		mock-1.4.9-use-gtar.patch
-Patch2:		mock-1.4.9-no-use-compress-program.patch
-Patch3:		mock-1.4.9-result-path.patch
+Patch1:		mock-1.4.9-no-use-compress-program.patch
+Patch2:		mock-1.4.9-result-path.patch
 BuildArch:	noarch
-Requires:	gnutar
+Requires:	tar
 Requires:	pigz
 Requires:	usermode-consoleonly
 Requires:	createrepo_c
