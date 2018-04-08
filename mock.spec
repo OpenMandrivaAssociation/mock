@@ -16,7 +16,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	1.4.9
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -33,7 +33,7 @@ BuildArch:	noarch
 Requires:	tar
 Requires:	pigz
 Requires:	usermode-consoleonly
-Requires:	createrepo_c
+Recommends:	createrepo_c
 
 # Not yet available
 #Requires: mock-core-configs >= 28.2
