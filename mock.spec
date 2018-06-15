@@ -15,8 +15,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	1.4.9
-Release:	4
+Version:	1.4.11
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -27,12 +27,10 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
-# use gtar, and disable pigz/gzip
-Patch1:		mock-1.4.9-no-use-compress-program.patch
 # Switch to 32-bit personality when building for armv7*/armv8*
 Patch2:		mock-1.4.9-use-32bit-personality-for-armv7armv8.patch
 BuildArch:	noarch
-Requires:	tar
+Requires:	bsdtar
 Requires:	pigz
 Requires:	usermode-consoleonly
 Recommends:	createrepo_c
