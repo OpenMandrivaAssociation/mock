@@ -82,7 +82,6 @@ Mock takes an SRPM and builds it in a chroot.
 Summary:	Mock SCM integration module
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
-Requires:	cvs
 Requires:	git
 Requires:	subversion
 Requires:	tar
