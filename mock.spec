@@ -16,7 +16,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	1.4.13
-Release:	4
+Release:	5
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -29,6 +29,8 @@ Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{versio
 Patch0:		mock-1.4.9-bin-paths.patch
 # Switch to 32-bit personality when building for armv7*/armv8*
 Patch2:		mock-1.4.9-use-32bit-personality-for-armv7armv8.patch
+# https://github.com/libarchive/libarchive/issues/1060
+Patch3:		remove-compress-option.patch
 BuildArch:	noarch
 Requires:	bsdtar
 Requires:	pigz
