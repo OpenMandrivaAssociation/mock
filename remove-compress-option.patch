@@ -1,0 +1,13 @@
+diff --git a/py/mockbuild/plugins/root_cache.py b/py/mockbuild/plugins/root_cache.py
+index 965c7ee..c2f0b35 100644
+--- a/py/mockbuild/plugins/root_cache.py
++++ b/py/mockbuild/plugins/root_cache.py
+@@ -188,7 +188,7 @@ class RootCache(object):
+                 self._root_cache_handle_mounts()
+                 self.state.start("creating root cache")
+                 if self.config['tar'] == 'bsdtar':
+-                    __tar_cmd = ["bsdtar", "--one-file-system"] + self.compressArgs + \
++                    __tar_cmd = ["bsdtar", "--one-file-system"] + \
+                                 ["-cf", self.rootCacheFile,
+                                  "-C", self.buildroot.make_chroot_path()] + \
+                                 self.exclude_tar_cmds + ["."]
