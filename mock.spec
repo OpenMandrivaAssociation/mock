@@ -16,7 +16,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	1.4.13
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
