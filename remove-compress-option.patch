@@ -1,13 +1,14 @@
-diff --git a/py/mockbuild/plugins/root_cache.py b/py/mockbuild/plugins/root_cache.py
-index 965c7ee..c2f0b35 100644
---- a/py/mockbuild/plugins/root_cache.py
-+++ b/py/mockbuild/plugins/root_cache.py
-@@ -188,7 +188,7 @@ class RootCache(object):
-                 self._root_cache_handle_mounts()
-                 self.state.start("creating root cache")
-                 if self.config['tar'] == 'bsdtar':
--                    __tar_cmd = ["bsdtar", "--one-file-system"] + self.compressArgs + \
-+                    __tar_cmd = ["bsdtar", "--one-file-system"] + \
-                                 ["-cf", self.rootCacheFile,
-                                  "-C", self.buildroot.make_chroot_path()] + \
-                                 self.exclude_tar_cmds + ["."]
+diff -up mock-1.4.13/py/mockbuild/plugins/root_cache.py.3~ mock-1.4.13/py/mockbuild/plugins/root_cache.py
+--- mock-1.4.13/py/mockbuild/plugins/root_cache.py.3~	2018-09-06 23:39:32.213931962 +0200
++++ mock-1.4.13/py/mockbuild/plugins/root_cache.py	2018-09-06 23:41:33.359364458 +0200
+@@ -128,8 +128,8 @@ class RootCache(object):
+                 else:
+                     __tar_cmd = "gtar"
+                 mockbuild.util.do(
+-                    [__tar_cmd] + self.compressArgs + ["-xf", self.rootCacheFile,
+-                                                       "-C", self.buildroot.make_chroot_path()],
++                    [__tar_cmd] + ["-xf", self.rootCacheFile,
++                                   "-C", self.buildroot.make_chroot_path()],
+                     shell=False, printOutput=True
+                 )
+                 for item in self.exclude_dirs:
