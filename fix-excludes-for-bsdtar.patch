@@ -1,0 +1,13 @@
+diff --git a/py/mockbuild/util.py b/py/mockbuild/util.py
+index ac58e8e..46de679 100644
+--- a/py/mockbuild/util.py
++++ b/py/mockbuild/util.py
+@@ -874,7 +874,7 @@ def setup_default_config_opts(unprivUid, version, pkgpythondir):
+             'dir': "%(cache_topdir)s/%(root)s/root_cache/",
+             'tar': "gnutar",
+             'compress_program': 'pigz',
+-            'exclude_dirs': ["./proc", "./sys", "./dev", "./tmp/ccache", "./var/cache/yum", "./var/cache/dnf"],
++            'exclude_dirs': ["^./proc", "^./sys", "^./dev", "^./tmp/ccache", "^./var/cache/yum", "^./var/cache/dnf"],
+             'extension': '.gz'},
+         'bind_mount_enable': True,
+         'bind_mount_opts': {
