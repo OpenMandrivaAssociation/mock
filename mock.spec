@@ -33,6 +33,7 @@ Patch2:		mock-1.4.9-use-32bit-personality-for-armv7armv8.patch
 Patch3:		remove-compress-option.patch
 # https://github.com/rpm-software-management/mock/issues/219
 Patch4:		fix-excludes-for-bsdtar.patch
+
 BuildArch:	noarch
 Requires:	bsdtar
 Requires:	pigz

@@ -1,8 +1,25 @@
-diff --git a/py/mockbuild/util.py b/py/mockbuild/util.py
-index ac58e8e..46de679 100644
---- a/py/mockbuild/util.py
-+++ b/py/mockbuild/util.py
-@@ -874,7 +874,7 @@ def setup_default_config_opts(unprivUid, version, pkgpythondir):
+diff -Naur mock-1.4.13/py/mockbuild/plugins/root_cache.py mock-1.4.13.tpg/py/mockbuild/plugins/root_cache.py
+--- mock-1.4.13/py/mockbuild/plugins/root_cache.py	2018-10-27 03:07:21.914735000 +0000
++++ mock-1.4.13.tpg/py/mockbuild/plugins/root_cache.py	2018-10-27 03:11:55.374731428 +0000
+@@ -157,11 +157,11 @@
+         for m in self.buildroot.mounts.get_mountpoints():
+             if m.startswith('/'):
+                 if m.startswith(br_path):
+-                    self.exclude_tar_cmds.append('--exclude=.%s' % m[len(br_path):])
++                    self.exclude_tar_cmds.append('--exclude=^%s' % m[len(br_path):])
+                 else:
+-                    self.exclude_tar_cmds.append('--exclude=.%s' % m)
++                    self.exclude_tar_cmds.append('--exclude=^%s' % m)
+             else:
+-                self.exclude_tar_cmds.append('--exclude=./%s' % m)
++                self.exclude_tar_cmds.append('--exclude=^./%s' % m)
+ 
+     @traceLog()
+     def _rootCachePostInitHook(self):
+diff -Naur mock-1.4.13/py/mockbuild/util.py mock-1.4.13.tpg/py/mockbuild/util.py
+--- mock-1.4.13/py/mockbuild/util.py	2018-10-27 03:07:21.911735000 +0000
++++ mock-1.4.13.tpg/py/mockbuild/util.py	2018-10-27 03:10:20.715732737 +0000
+@@ -874,7 +874,7 @@
              'dir': "%(cache_topdir)s/%(root)s/root_cache/",
              'tar': "gnutar",
              'compress_program': 'pigz',
