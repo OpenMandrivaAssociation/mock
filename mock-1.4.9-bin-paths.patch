@@ -1,6 +1,7 @@
---- mock-1.4.9/py/mockbuild/plugins/hw_info.py.omv~	2018-03-06 16:11:07.342296880 +0100
-+++ mock-1.4.9/py/mockbuild/plugins/hw_info.py	2018-03-06 16:11:25.414521316 +0100
-@@ -42,12 +42,12 @@ class HwInfo(object):
+diff -Naur mock-1.4.14/py/mockbuild/plugins/hw_info.py mock-1.4.14.tpg/py/mockbuild/plugins/hw_info.py
+--- mock-1.4.14/py/mockbuild/plugins/hw_info.py	2019-02-19 11:14:21.000000000 +0000
++++ mock-1.4.14.tpg/py/mockbuild/plugins/hw_info.py	2019-03-04 19:31:39.324000000 +0000
+@@ -42,12 +42,12 @@
          out.write("CPU info:\n")
          out.write(output)
  
@@ -15,9 +16,10 @@
          output = mockbuild.util.do(cmd, shell=False, returnOutput=True, raiseExc=False)
          out.write("\n\nStorage:\n")
          out.write(output)
---- mock-1.4.9/py/mockbuild/plugins/root_cache.py.omv~	2018-03-06 16:09:48.668320030 +0100
-+++ mock-1.4.9/py/mockbuild/plugins/root_cache.py	2018-03-06 16:10:09.439577903 +0100
-@@ -35,7 +35,7 @@ class RootCache(object):
+diff -Naur mock-1.4.14/py/mockbuild/plugins/root_cache.py mock-1.4.14.tpg/py/mockbuild/plugins/root_cache.py
+--- mock-1.4.14/py/mockbuild/plugins/root_cache.py	2019-02-19 11:14:21.000000000 +0000
++++ mock-1.4.14.tpg/py/mockbuild/plugins/root_cache.py	2019-03-04 19:32:09.018000000 +0000
+@@ -35,7 +35,7 @@
          self.rootCacheFile = os.path.join(self.rootSharedCachePath, "cache.tar")
          self.rootCacheLock = None
          self.compressProgram = self.root_cache_opts['compress_program']
@@ -25,10 +27,11 @@
 +        if self.compressProgram == 'pigz' and not os.path.exists('/bin/pigz'):
              getLog().warning("specified 'pigz' as the root cache compress program but not available; using gzip")
              self.compressProgram = 'gzip'
-         if self.compressProgram:
---- mock-1.4.9/py/mockbuild/util.py.omv~	2018-03-06 16:16:27.234321984 +0100
-+++ mock-1.4.9/py/mockbuild/util.py	2018-03-06 16:17:34.860396021 +0100
-@@ -199,7 +199,7 @@ def get_machinectl_uuid(chroot_path):
+         # bsdtar use different decompress program
+diff -Naur mock-1.4.14/py/mockbuild/util.py mock-1.4.14.tpg/py/mockbuild/util.py
+--- mock-1.4.14/py/mockbuild/util.py	2019-02-19 11:14:21.000000000 +0000
++++ mock-1.4.14.tpg/py/mockbuild/util.py	2019-03-04 19:35:17.369000000 +0000
+@@ -268,7 +268,7 @@
      # we will ignore errors in machinectl, it sometimes fails for various errors (cannot find IP addr...)
      # we do not care about exit code, we just want the output
      # RHEL7 does not know --no-legend, so we must filter the legend out
@@ -37,7 +40,7 @@
      if (isinstance(vm_list, bytes)):
          vm_list = vm_list.decode("utf-8")
      vm_list = '\n'.join(vm_list.split('\n')[1:-2])
-@@ -207,7 +207,7 @@ def get_machinectl_uuid(chroot_path):
+@@ -276,7 +276,7 @@
          if len(name) > 0:
              m_uuid = name.split()[0]
              try:
@@ -46,7 +49,7 @@
                  if (isinstance(vm_root, bytes)):
                      vm_root = vm_root.decode("utf-8")
              except subprocess.CalledProcessError:
-@@ -237,7 +237,7 @@ def orphansKill(rootToKill):
+@@ -306,7 +306,7 @@
          m_uuid = get_machinectl_uuid(rootToKill)
          if m_uuid:
              getLog().warning("Machine %s still running. Killing...", m_uuid)
@@ -55,7 +58,7 @@
  
  
  @traceLog()
-@@ -754,7 +754,7 @@ def clean_env():
+@@ -836,7 +836,7 @@
  
  
  def get_fs_type(path):

@@ -15,8 +15,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	1.4.13
-Release:	9
+Version:	1.4.14
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -27,12 +27,6 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
-# Switch to 32-bit personality when building for armv7*/armv8*
-Patch2:		mock-1.4.9-use-32bit-personality-for-armv7armv8.patch
-# https://github.com/libarchive/libarchive/issues/1060
-Patch3:		remove-compress-option.patch
-# https://github.com/rpm-software-management/mock/issues/219
-Patch4:		fix-excludes-for-bsdtar.patch
 
 BuildArch:	noarch
 Requires:	bsdtar
@@ -44,7 +38,6 @@ Recommends:	createrepo_c
 #Requires: mock-core-configs >= 28.2
 
 Requires:	systemd
-
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	pkgconfig(bash-completion)
