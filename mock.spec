@@ -16,7 +16,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	1.4.14
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -103,6 +103,7 @@ of the buildroot.
 for file in py/mock.py py/mockchain.py; do
   sed -i 1"s|#!/usr/bin/python |#!%{__python} |" $file
 done
+sed -i -e 's,/usr/bin/bash,/bin/bash,g' *.sh
 
 %build
 for i in py/mock.py py/mockchain.py; do
@@ -159,7 +160,7 @@ exit 0
 
 %check
 # ignore the errors for now, just print them and hopefully somebody will fix it one day
-python3-pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
+pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
 
 %files
 %defattr(0644, root, mock)
