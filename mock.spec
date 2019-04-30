@@ -27,6 +27,7 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
+Patch1:		fix_exclude.patch
 
 BuildArch:	noarch
 Requires:	bsdtar
