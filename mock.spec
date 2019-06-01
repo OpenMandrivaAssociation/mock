@@ -16,7 +16,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	1.4.14
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -49,6 +49,7 @@ Requires:	python-six >= 1.4.0
 Requires:	python-requests
 Requires:	python-rpm
 Requires:	python-pyroute2
+Requires:	python-jinja2
 #check
 BuildRequires:	python-pylint
 BuildRequires:	python-requests
