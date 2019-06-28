@@ -1,0 +1,14 @@
+diff -up mock/py/mockbuild/package_manager.py.omv~ mock/py/mockbuild/package_manager.py
+--- mock/py/mockbuild/package_manager.py.omv~	2019-06-28 12:14:09.626791492 +0200
++++ mock/py/mockbuild/package_manager.py	2019-06-28 12:25:05.342759679 +0200
+@@ -162,6 +162,10 @@ class _PackageManager(object):
+     def builddep(self, *args, **kwargs):
+         try:
+             result = self.execute('builddep', returnOutput=1, *args)
++            if result != 0:
++                # If it fails, try again after wiping dnf caches...
++                self.execute('clean', 'all')
++                result = self.execute('builddep', returnOutput=1, *args)
+         except (FileNotFoundError) as error:
+             er = str(error)
+             if "builddep" in er:

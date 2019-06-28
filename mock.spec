@@ -1,10 +1,3 @@
-# (ngompa) disable rpmlint to avoid terrible cyclic dependency problem in rpm5->rpm4 + python2->python3 transition
-# remove after rpm5->rpm4 transition is complete
-%undefine _build_pkgcheck_set
-%undefine _build_pkgcheck_srpm
-%undefine _nonzero_exit_pkgcheck_terminate_build
-###
-
 # WARNING: This package is synchronized with Mageia and Fedora!
 
 # mock group id allocate from Fedora
@@ -15,8 +8,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	1.4.14
-Release:	3
+Version:	1.4.16
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -25,9 +18,10 @@ URL:		https://github.com/rpm-software-management/mock/
 # cd mock
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
-Source0:	%{url}/releases/download/%{name}-%{version}-%{origrel}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/rpm-software-management/mock/archive/mock-%{version}-1.tar.gz
 Patch0:		mock-1.4.9-bin-paths.patch
 Patch1:		fix_exclude.patch
+Patch2:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 
 BuildArch:	noarch
 Requires:	bsdtar
@@ -100,7 +94,7 @@ Mock plugin that enables using LVM as a backend and support creating snapshots
 of the buildroot.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n mock-mock-%{version}-1/mock
 
 for file in py/mock.py py/mockchain.py; do
   sed -i 1"s|#!/usr/bin/python |#!%{__python} |" $file
