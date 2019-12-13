@@ -40,6 +40,7 @@ BuildRequires:	pkgconfig(bash-completion)
 BuildRequires:	pkgconfig(python3)
 Requires:	python
 Requires:	python-distro
+# remove six on next release
 Requires:	python-six >= 1.4.0
 Requires:	python-requests
 Requires:	python-rpm
@@ -49,6 +50,7 @@ Requires:	python-jinja2
 BuildRequires:	python-pylint
 BuildRequires:	python-requests
 BuildRequires:	python-distro
+# remove six on next release
 BuildRequires:	python-six >= 1.4.0
 BuildRequires:	python-rpm
 BuildRequires:	python-pyroute2
