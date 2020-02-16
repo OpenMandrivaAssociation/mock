@@ -146,7 +146,7 @@ cp -a py/mockbuild %{buildroot}%{python_sitelib}/
 install -d %{buildroot}%{_mandir}/man1
 cp -a docs/mockchain.1 docs/mock.1 %{buildroot}%{_mandir}/man1/
 
-install -d %{buildroot}/var/lib/mock
+install -d %{buildroot}/var/lib/mock/src
 install -d %{buildroot}/var/cache/mock
 
 # Manually invoke byte compilation
@@ -201,6 +201,7 @@ pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
 %defattr(0775, root, mock, 02775)
 %dir %{_localstatedir}/cache/mock
 %dir %{_localstatedir}/lib/mock
+%dir %{_localstatedir}/lib/mock/src
 
 %files scm
 %{python_sitelib}/mockbuild/scm.py*
