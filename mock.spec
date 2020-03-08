@@ -47,7 +47,7 @@ Requires:	python-rpm
 Requires:	python-pyroute2
 Requires:	python-jinja2
 #check
-BuildRequires:	python-pylint
+#BuildRequires:	python-pylint
 BuildRequires:	python-requests
 BuildRequires:	python-distro
 # remove six on next release
@@ -159,7 +159,7 @@ exit 0
 
 %check
 # ignore the errors for now, just print them and hopefully somebody will fix it one day
-pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
+#pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
 
 %files
 %defattr(0644, root, mock)
