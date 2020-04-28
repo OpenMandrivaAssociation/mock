@@ -1,4 +1,5 @@
 # WARNING: This package is synchronized with Mageia and Fedora!
+%define _pkgdocdir %{_docdir}/%{name}-%{version}
 
 # mock group id allocate from Fedora
 %global mockgid 135
@@ -8,8 +9,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	1.4.16
-Release:	3
+Version:	2.2
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -19,8 +20,6 @@ URL:		https://github.com/rpm-software-management/mock/
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
 Source0:	https://github.com/rpm-software-management/mock/archive/mock-%{version}-1.tar.gz
-Patch0:		mock-1.4.9-bin-paths.patch
-Patch1:		fix_exclude.patch
 Patch2:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 
 BuildArch:	noarch
@@ -99,31 +98,32 @@ of the buildroot.
 %prep
 %autosetup -p1 -n mock-mock-%{version}-1/mock
 
-for file in py/mock.py py/mockchain.py; do
-  sed -i 1"s|#!/usr/bin/python |#!%{__python} |" $file
+for file in py/mock.py py/mock-parse-buildlog.py; do
+  sed -i 1"s|#!/usr/bin/python3 |#!%{__python} |" $file
 done
-sed -i -e 's,/usr/bin/bash,/bin/bash,g' *.sh
 
 %build
-for i in py/mock.py py/mockchain.py; do
+for i in py/mock.py py/mock-parse-buildlog.py; do
     perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="%{version}"|' $i
     perl -p -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR="%{_sysconfdir}"|' $i
     perl -p -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR="%{python_sitelib}"|' $i
     perl -p -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR="%{python_sitelib}/mockbuild"|' $i
 done
-for i in docs/mockchain.1 docs/mock.1; do
-    perl -p -i -e 's|"@VERSION@"|"%{version}"|' $i
+
+for i in docs/mock.1 docs/mock-parse-buildlog.1; do
+    perl -p -i -e 's|\@VERSION\@|%{version}"|' $i
 done
 
 
 %install
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_libexecdir}/mock
-install py/mockchain.py %{buildroot}%{_bindir}/mockchain
+install mockchain %{buildroot}%{_bindir}/mockchain
+install py/mock-parse-buildlog.py %{buildroot}%{_bindir}/mock-parse-buildlog
 install py/mock.py %{buildroot}%{_libexecdir}/mock/mock
 ln -s consolehelper %{buildroot}%{_bindir}/mock
 install create_default_route_in_container.sh %{buildroot}%{_libexecdir}/mock/
-
+ 
 install -d %{buildroot}%{_sysconfdir}/pam.d
 cp -a etc/pam/* %{buildroot}%{_sysconfdir}/pam.d/
 
@@ -135,7 +135,7 @@ cp -a etc/consolehelper/mock %{buildroot}%{_sysconfdir}/security/console.apps/%{
 
 install -d %{buildroot}%{_datadir}/bash-completion/completions/
 cp -a etc/bash_completion.d/* %{buildroot}%{_datadir}/bash-completion/completions/
-ln -s mock %{buildroot}%{_datadir}/bash-completion/completions/mockchain
+ln -s mock %{buildroot}%{_datadir}/bash-completion/completions/mock-parse-buildlog
 
 install -d %{buildroot}%{_sysconfdir}/pki/mock
 cp -a etc/pki/* %{buildroot}%{_sysconfdir}/pki/mock/
@@ -144,13 +144,17 @@ install -d %{buildroot}%{python_sitelib}/
 cp -a py/mockbuild %{buildroot}%{python_sitelib}/
 
 install -d %{buildroot}%{_mandir}/man1
-cp -a docs/mockchain.1 docs/mock.1 %{buildroot}%{_mandir}/man1/
+cp -a docs/mock.1 docs/mock-parse-buildlog.1 %{buildroot}%{_mandir}/man1/
+install -d %{buildroot}%{_datadir}/cheat
+cp -a docs/mock.cheat %{buildroot}%{_datadir}/cheat/mock
 
+install -d %{buildroot}/var/lib/mock
 install -d %{buildroot}/var/lib/mock/src
 install -d %{buildroot}/var/cache/mock
 
-# Manually invoke byte compilation
-%py_compile %{buildroot}
+
+mkdir -p %{buildroot}%{_pkgdocdir}
+install -p -m 0644 docs/site-defaults.cfg %{buildroot}%{_pkgdocdir}
 
 %pre
 # check for existence of mock group, create it if not found
@@ -163,15 +167,16 @@ exit 0
 
 %files
 %defattr(0644, root, mock)
-%config(noreplace) %{_sysconfdir}/mock/site-defaults.cfg
+%doc %{_pkgdocdir}/site-defaults.cfg
 %{_datadir}/bash-completion/completions/mock
-%{_datadir}/bash-completion/completions/mockchain
+%{_datadir}/bash-completion/completions/mock-parse-buildlog
 
 %defattr(-, root, root)
 
 # executables
 %{_bindir}/mock
 %{_bindir}/mockchain
+%{_bindir}/mock-parse-buildlog
 %{_libexecdir}/mock
 
 # python stuff
@@ -192,7 +197,8 @@ exit 0
 
 # docs
 %{_mandir}/man1/mock.1.*
-%{_mandir}/man1/mockchain.1.*
+%{_mandir}/man1/mock-parse-buildlog.1*
+%{_datadir}/cheat/mock
 
 # license
 %license COPYING
