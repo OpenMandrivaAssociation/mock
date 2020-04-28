@@ -158,7 +158,6 @@ install -d %{buildroot}/var/cache/mock
 
 mkdir -p %{buildroot}%{_pkgdocdir}
 install -p -m 0644 docs/site-defaults.cfg %{buildroot}%{_pkgdocdir}
-install -p -m 0644 docs/site-defaults.cfg %{buildroot}%{_sysconfdir}/mock/site-defaults.cfg
 
 %pre
 # check for existence of mock group, create it if not found
@@ -172,7 +171,6 @@ exit 0
 %files
 %defattr(0644, root, mock)
 %doc %{_pkgdocdir}/site-defaults.cfg
-%config(noreplace) %{_sysconfdir}/mock/site-defaults.cfg
 %{_datadir}/bash-completion/completions/mock
 %{_datadir}/bash-completion/completions/mock-parse-buildlog
 
