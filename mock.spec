@@ -102,6 +102,8 @@ for file in py/mock.py py/mock-parse-buildlog.py; do
   sed -i 1"s|#!/usr/bin/python3 |#!%{__python} |" $file
 done
 
+sed -i -e 's,/usr/bin/bash,/bin/bash,g' *.sh
+
 %build
 for i in py/mock.py py/mock-parse-buildlog.py; do
     perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="%{version}"|' $i
