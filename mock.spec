@@ -27,6 +27,7 @@ Requires:	bsdtar
 Requires:	pigz
 Requires:	usermode-consoleonly
 Requires:	nosync
+Requires:	distribution-gpg-keys
 Recommends:	createrepo_c
 
 # Not yet available
