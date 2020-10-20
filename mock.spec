@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	2.3
+Version:	2.6
 Release:	1
 License:	GPLv2+
 Group:		Development/Other
@@ -19,7 +19,7 @@ URL:		https://github.com/rpm-software-management/mock/
 # cd mock
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
-Source0:	https://github.com/rpm-software-management/mock/archive/mock-%{version}.tar.gz
+Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-%{version}-1/mock-%{version}.tar.gz
 Patch2:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 
 BuildArch:	noarch
