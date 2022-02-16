@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	2.6
+Version:	2.16
 Release:	1
 License:	GPLv2+
 Group:		Development/Other
@@ -28,6 +28,7 @@ Requires:	pigz
 Requires:	usermode-consoleonly
 Requires:	nosync
 Requires:	distribution-gpg-keys
+Requires:	python-templated-dictionary
 Recommends:	createrepo_c
 
 # Not yet available
