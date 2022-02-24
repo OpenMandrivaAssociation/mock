@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	2.16
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -186,9 +186,7 @@ exit 0
 # python stuff
 %{python_sitelib}/*
 %exclude %{python_sitelib}/mockbuild/scm.*
-%exclude %{python_sitelib}/mockbuild/__pycache__/scm.*.py*
 %exclude %{python_sitelib}/mockbuild/plugins/lvm_root.*
-%exclude %{python_sitelib}/mockbuild/plugins/__pycache__/lvm_root.*.py*
 # config files
 %dir  %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*.ini
@@ -215,8 +213,6 @@ exit 0
 
 %files scm
 %{python_sitelib}/mockbuild/scm.py*
-%{python_sitelib}/mockbuild/__pycache__/scm.*.py*
 
 %files lvm
 %{python_sitelib}/mockbuild/plugins/lvm_root.*
-%{python_sitelib}/mockbuild/plugins/__pycache__/lvm_root.*.py*
