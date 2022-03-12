@@ -20,58 +20,30 @@ URL:		https://github.com/rpm-software-management/mock/
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
 Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-%{version}-1/mock-%{version}.tar.gz
-Patch2:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
-
+Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 BuildArch:	noarch
-Requires:	bsdtar
-Requires:	pigz
-Requires:	usermode-consoleonly
-Requires:	nosync
-Requires:	distribution-gpg-keys
-Requires:	python-templated-dictionary
-Recommends:	createrepo_c
-
-# Not yet available
-#Requires: mock-core-configs >= 28.2
-
-Requires:	systemd
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	pkgconfig(bash-completion)
-BuildRequires:	pkgconfig(python3)
-Requires:	python
+BuildRequires:	pkgconfig(python)
 Requires:	python-distro
-# remove six on next release
-Requires:	python-six >= 1.4.0
+Requires:	python-jinja2
 Requires:	python-requests
 Requires:	python-rpm
 Requires:	python-pyroute2
-Requires:	python-jinja2
-#check
-#BuildRequires:	python-pylint
-BuildRequires:	python-requests
-BuildRequires:	python-distro
-# remove six on next release
-BuildRequires:	python-six >= 1.4.0
-BuildRequires:	python-rpm
-BuildRequires:	python-pyroute2
-
-# We need these for the OpenMandriva targets
+Requires:	python-templated-dictionary
 Requires:	dnf
 Requires:	dnf-plugins-core
-
-# For EPEL targets
-Recommends:	dnf-yum
-Recommends:	dnf-utils
-
-Recommends:	btrfs-progs
-BuildRequires:	perl
-
-# hwinfo plugin
-Requires(pre):	util-linux
-Requires(pre):	coreutils
-Requires(pre):	shadow
+Requires:	bsdtar
+Requires:	pigz
+Requires:	usermode-consoleonly
+Requires:	distribution-gpg-keys
+Requires:	createrepo_c
+Requires:	systemd
+Requires:	systemd-container
 Requires:	procps-ng
+Requires:	util-linux
+Requires:	coreutils
+Requires(pre):	shadow
+Suggests:	iproute2
 
 %description
 Mock takes an SRPM and builds it in a chroot.
@@ -79,10 +51,10 @@ Mock takes an SRPM and builds it in a chroot.
 %package scm
 Summary:	Mock SCM integration module
 Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Requires:	git
-Requires:	subversion
-Requires:	tar
+Requires:	%{name} = %{EVRD}
+Recommends:	git
+Recommends:	subversion
+Recommends:	tar
 
 %description scm
 Mock SCM integration module.
@@ -101,23 +73,22 @@ of the buildroot.
 %autosetup -p1
 
 for file in py/mock.py py/mock-parse-buildlog.py; do
-  sed -i 1"s|#!/usr/bin/python3 |#!%{__python} |" $file
+    sed -i 1"s|#!/usr/bin/python3 |#!%{__python} |" $file
 done
 
 sed -i -e 's,/usr/bin/bash,/bin/bash,g' *.sh
 
 %build
-for i in py/mock.py py/mock-parse-buildlog.py; do
-    perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="%{version}"|' $i
-    perl -p -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR="%{_sysconfdir}"|' $i
-    perl -p -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR="%{python_sitelib}"|' $i
-    perl -p -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR="%{python_sitelib}/mockbuild"|' $i
+for i in py/mock.py ; do
+    sed -i -e 's|^__VERSION__\s*=.*|__VERSION__ = "%{version}"|' $i
+    sed -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR = "%{_sysconfdir}"|' $i
+    sed -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR = "%{python_sitelib}"|' $i
+    sed -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR = "%{python_sitelib}/mockbuild"|' $i
 done
 
 for i in docs/mock.1 docs/mock-parse-buildlog.1; do
-    perl -p -i -e 's|\@VERSION\@|%{version}"|' $i
+    sed -i -e 's|\@VERSION\@|%{version}"|' $i
 done
-
 
 %install
 install -d %{buildroot}%{_bindir}
@@ -153,30 +124,27 @@ install -d %{buildroot}%{_datadir}/cheat
 cp -a docs/mock.cheat %{buildroot}%{_datadir}/cheat/mock
 
 install -d %{buildroot}/var/lib/mock
-install -d %{buildroot}/var/lib/mock/src
 install -d %{buildroot}/var/cache/mock
-
 
 mkdir -p %{buildroot}%{_pkgdocdir}
 install -p -m 0644 docs/site-defaults.cfg %{buildroot}%{_pkgdocdir}
+
+sed -i 's/^_MOCK_NVR = None$/_MOCK_NVR = "%{name}-%{version}-%{release}"/' \
+    %{buildroot}%{_libexecdir}/mock/mock
 
 %pre
 # check for existence of mock group, create it if not found
 getent group mock > /dev/null || groupadd -f -g %mockgid -r mock
 exit 0
 
-%check
-# ignore the errors for now, just print them and hopefully somebody will fix it one day
-#pylint py/mockbuild/ py/*.py py/mockbuild/plugins/* || :
-
 %files
+%license COPYING
 %defattr(0644, root, mock)
 %doc %{_pkgdocdir}/site-defaults.cfg
 %{_datadir}/bash-completion/completions/mock
 %{_datadir}/bash-completion/completions/mock-parse-buildlog
 
 %defattr(-, root, root)
-
 # executables
 %{_bindir}/mock
 %{_bindir}/mockchain
@@ -198,18 +166,14 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pki/mock/*
 
 # docs
-%{_mandir}/man1/mock.1.*
-%{_mandir}/man1/mock-parse-buildlog.1*
+%doc %{_mandir}/man1/mock.1.*
+%doc %{_mandir}/man1/mock-parse-buildlog.1*
 %{_datadir}/cheat/mock
-
-# license
-%license COPYING
 
 # cache & build dirs
 %defattr(0775, root, mock, 02775)
 %dir %{_localstatedir}/cache/mock
 %dir %{_localstatedir}/lib/mock
-%dir %{_localstatedir}/lib/mock/src
 
 %files scm
 %{python_sitelib}/mockbuild/scm.py*
