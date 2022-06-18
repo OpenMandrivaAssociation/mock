@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	2.16
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -21,6 +21,9 @@ URL:		https://github.com/rpm-software-management/mock/
 # tito build --tgz
 Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-%{version}-1/mock-%{version}.tar.gz
 Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
+# Remove /bin/rpm hardcode to help during
+# usrmerge transition
+Patch1:		mock-2.16-usrbinrpm.patch
 BuildArch:	noarch
 BuildRequires:	pkgconfig(bash-completion)
 BuildRequires:	pkgconfig(python)
@@ -75,8 +78,6 @@ of the buildroot.
 for file in py/mock.py py/mock-parse-buildlog.py; do
     sed -i 1"s|#!/usr/bin/python3 |#!%{__python} |" $file
 done
-
-sed -i -e 's,/usr/bin/bash,/bin/bash,g' *.sh
 
 %build
 for i in py/mock.py ; do
