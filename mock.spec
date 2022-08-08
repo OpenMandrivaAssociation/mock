@@ -9,8 +9,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	2.16
-Release:	4
+Version:	3.1
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -92,6 +92,10 @@ for i in docs/mock.1 docs/mock-parse-buildlog.1; do
 done
 
 %install
+#base filesystem
+mkdir -p %{buildroot}%{_sysconfdir}/mock/eol/templates
+mkdir -p %{buildroot}%{_sysconfdir}/mock/templates
+
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_libexecdir}/mock
 install mockchain %{buildroot}%{_bindir}/mockchain
@@ -140,6 +144,11 @@ exit 0
 
 %files
 %license COPYING
+%dir %{_sysconfdir}/mock
+%dir %{_sysconfdir}/mock/eol
+%dir %{_sysconfdir}/mock/eol/templates
+%dir %{_sysconfdir}/mock/templates
+%dir %{_datadir}/cheat
 %defattr(0644, root, mock)
 %doc %{_pkgdocdir}/site-defaults.cfg
 %{_datadir}/bash-completion/completions/mock
@@ -157,7 +166,6 @@ exit 0
 %exclude %{python_sitelib}/mockbuild/scm.*
 %exclude %{python_sitelib}/mockbuild/plugins/lvm_root.*
 # config files
-%dir  %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/*.ini
 %config(noreplace) %{_sysconfdir}/pam.d/%{name}
 %config(noreplace) %{_sysconfdir}/security/console.apps/%{name}
