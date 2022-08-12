@@ -1,0 +1,10 @@
+/* Allow members of the mock group to execute mock without
+ * password authentication, similar to "sudo NOPASSWD:"
+ */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.openmandriva.mock.pkexec.run" &&
+        subject.isInGroup("mock"))
+    {
+        return polkit.Result.YES;
+    }
+});

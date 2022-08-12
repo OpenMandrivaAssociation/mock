@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	3.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -20,6 +20,12 @@ URL:		https://github.com/rpm-software-management/mock/
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
 Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-%{version}-1/mock-%{version}.tar.gz
+
+# (tpg) add polkit support
+Source1:	mock.wrapper
+Source2:	org.openmandriva.mock.policy
+Source3:	org.openmandriva.mock.rules
+
 Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 # Remove /bin/rpm hardcode to help during
 # usrmerge transition
@@ -37,7 +43,7 @@ Requires:	dnf
 Requires:	dnf-plugins-core
 Requires:	bsdtar
 Requires:	pigz
-Requires:	usermode-consoleonly
+Requires:	polkit
 Requires:	distribution-gpg-keys
 Requires:	createrepo_c
 Requires:	systemd
@@ -101,17 +107,20 @@ install -d %{buildroot}%{_libexecdir}/mock
 install mockchain %{buildroot}%{_bindir}/mockchain
 install py/mock-parse-buildlog.py %{buildroot}%{_bindir}/mock-parse-buildlog
 install py/mock.py %{buildroot}%{_libexecdir}/mock/mock
-ln -s consolehelper %{buildroot}%{_bindir}/mock
 install create_default_route_in_container.sh %{buildroot}%{_libexecdir}/mock/
+
+# polkit support
+install -d %{buildroot}%{_datadir}/polkit-1/actions
+install -d %{buildroot}%{_datadir}/polkit-1/rules
+install -m755 %{SOURCE1} %{buildroot}%{_bindir}/mock
+install -m644 %{SOURCE2} %{buildroot}%{_datadir}/polkit-1/actions/org.openmandriva.mock.policy
+install -m644 %{SOURCE3} %{buildroot}%{_datadir}/polkit-1/rules/org.openmandriva.mock.rules
 
 install -d %{buildroot}%{_sysconfdir}/pam.d
 cp -a etc/pam/* %{buildroot}%{_sysconfdir}/pam.d/
 
 install -d %{buildroot}%{_sysconfdir}/mock
 cp -a etc/mock/* %{buildroot}%{_sysconfdir}/mock/
-
-install -d %{buildroot}%{_sysconfdir}/security/console.apps/
-cp -a etc/consolehelper/mock %{buildroot}%{_sysconfdir}/security/console.apps/%{name}
 
 install -d %{buildroot}%{_datadir}/bash-completion/completions/
 cp -a etc/bash_completion.d/* %{buildroot}%{_datadir}/bash-completion/completions/
@@ -161,6 +170,10 @@ exit 0
 %{_bindir}/mock-parse-buildlog
 %{_libexecdir}/mock
 
+# polkit support
+%{_datadir}/polkit-1/actions/org.openmandriva.mock.policy
+%{_datadir}/polkit-1/rules/org.openmandriva.mock.rules
+
 # python stuff
 %{python_sitelib}/*
 %exclude %{python_sitelib}/mockbuild/scm.*
@@ -168,7 +181,6 @@ exit 0
 # config files
 %config(noreplace) %{_sysconfdir}/%{name}/*.ini
 %config(noreplace) %{_sysconfdir}/pam.d/%{name}
-%config(noreplace) %{_sysconfdir}/security/console.apps/%{name}
 
 # directory for personal gpg keys
 %dir %{_sysconfdir}/pki/mock

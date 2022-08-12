@@ -1,0 +1,4 @@
+#!/bin/sh
+
+[ -z $(command -v pkexec) ] && printf '%s\n' "pkexec is missing. Install polkit. Exiting." && exit 1
+exec /usr/bin/pkexec --user omv /usr/libexec/mock/mock
