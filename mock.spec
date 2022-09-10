@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	3.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -20,6 +20,8 @@ URL:		https://github.com/rpm-software-management/mock/
 # git reset --hard %{name}-%{version}-%{origrel}
 # tito build --tgz
 Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-%{version}-1/mock-%{version}.tar.gz
+# (tpg) use sudo these days, especially when /sbin got merged with /bin
+Source1:	mock.wrapper
 Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 # Remove /bin/rpm hardcode to help during
 # usrmerge transition
@@ -37,7 +39,7 @@ Requires:	dnf
 Requires:	dnf-plugins-core
 Requires:	bsdtar
 Requires:	pigz
-Requires:	usermode-consoleonly
+Requires:	sudo
 Requires:	distribution-gpg-keys
 Requires:	createrepo_c
 Requires:	systemd
@@ -101,7 +103,7 @@ install -d %{buildroot}%{_libexecdir}/mock
 install mockchain %{buildroot}%{_bindir}/mockchain
 install py/mock-parse-buildlog.py %{buildroot}%{_bindir}/mock-parse-buildlog
 install py/mock.py %{buildroot}%{_libexecdir}/mock/mock
-ln -s consolehelper %{buildroot}%{_bindir}/mock
+install -m755 %{SOURCE1} %{buildroot}%{_bindir}/mock
 install create_default_route_in_container.sh %{buildroot}%{_libexecdir}/mock/
 
 install -d %{buildroot}%{_sysconfdir}/pam.d

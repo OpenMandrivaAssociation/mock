@@ -1,0 +1,7 @@
+#!/bin/sh
+# (tpg) at OpenMandriva /usr/sbin and /usr/bin are merged
+
+[ ! -x /usr/libexec/mock/mock ] && printf '%s\n' 'mock is not installed poperly. Exiting.' && exit 1
+[ ! -x $(command -v sudo) ]  && printf '%s\n' 'sudo is not installed poperly. Exiting.' && exit 1
+
+exec sudo -En /usr/libexec/mock/mock "$@"
