@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	3.3
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -82,8 +82,8 @@ for file in py/mock.py py/mock-parse-buildlog.py; do
 done
 
 %build
-for i in py/mock.py ; do
-    sed -i -e 's|^__VERSION__\s*=.*|__VERSION__ = "%{version}"|' $i
+for i in py/mockbuild/constants.py ; do
+    sed -i -e 's|^VERSION\s*=.*|VERSION = "%{version}"|' $i
     sed -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR = "%{_sysconfdir}"|' $i
     sed -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR = "%{python_sitelib}"|' $i
     sed -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR = "%{python_sitelib}/mockbuild"|' $i
