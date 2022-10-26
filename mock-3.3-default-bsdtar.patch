@@ -1,0 +1,13 @@
+diff -up mock-3.3/py/mockbuild/config.py.omv~ mock-3.3/py/mockbuild/config.py
+--- mock-3.3/py/mockbuild/config.py.omv~	2022-10-26 19:29:12.998561319 +0200
++++ mock-3.3/py/mockbuild/config.py	2022-10-26 19:29:20.238615277 +0200
+@@ -98,7 +98,7 @@ def setup_default_config_opts():
+     config_opts['createrepo_command'] = '/usr/bin/createrepo_c -d -q -x *.src.rpm'  # default command
+ 
+     config_opts['tar_binary'] = "/bin/tar"
+-    config_opts['tar'] = "gnutar"
++    config_opts['tar'] = "bsdtar"
+ 
+     config_opts['backup_on_clean'] = False
+     config_opts['backup_base_dir'] = "{{basedir}}/backup"
+diff -up mock-3.3/py/mockbuild/plugins/root_cache.py.omv~ mock-3.3/py/mockbuild/plugins/root_cache.py

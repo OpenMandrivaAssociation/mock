@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	3.3
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -26,6 +26,8 @@ Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
 # Remove /bin/rpm hardcode to help during
 # usrmerge transition
 Patch1:		mock-2.16-usrbinrpm.patch
+# Our /usr/bin/tar is bsdtar
+Patch2:		mock-3.3-default-bsdtar.patch
 BuildArch:	noarch
 BuildRequires:	pkgconfig(bash-completion)
 BuildRequires:	pkgconfig(python)
