@@ -1,0 +1,12 @@
+diff -up mock-3.3/py/mockbuild/plugins/root_cache.py.omv~ mock-3.3/py/mockbuild/plugins/root_cache.py
+--- mock-3.3/py/mockbuild/plugins/root_cache.py.omv~	2022-10-26 21:50:29.370175043 +0200
++++ mock-3.3/py/mockbuild/plugins/root_cache.py	2022-10-26 21:50:56.040348062 +0200
+@@ -41,7 +41,7 @@ class RootCache(object):
+             self.compressProgram = 'gzip'
+ 
+         self.decompressProgram = self.root_cache_opts.get('decompress_program')
+-        if not self.decompressProgram:
++        if self.compressProgram and not self.decompressProgram:
+             if self.config['tar'] == 'bsdtar':
+                 # Contrary to GNU tar, BSD tar doesn't automatically add the "-d"
+                 # option to the compressing utility while decompressing.
