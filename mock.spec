@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	3.5
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -30,6 +30,12 @@ Patch1:		mock-2.16-usrbinrpm.patch
 Patch2:		mock-3.3-default-bsdtar.patch
 # Appending "-d" to an empty compressProgram is a stupid idea
 Patch3:		mock-3.3-no-invalid-decompressProgram.patch
+# (tpg) this crap was introduced jus to only check is some ancient rpmbuild supports --noclean option
+# https://github.com/rpm-software-management/mock/commit/cab12758da074e8af87189bd8f4a11c73a1f1ebf
+Patch4:		mock-3.5-stop-calling-rpmbuild-to-discover-noclean-is-supported.patch
+# (tpg) patches from upstream
+Patch100:	https://github.com/rpm-software-management/mock/commit/adf58f0c172dd8d5493ca5e8dead5ade23caf711.patch
+Patch101:	https://github.com/rpm-software-management/mock/commit/a730c331de14ef6c8246ccde3959cc528a75531e.patch
 BuildArch:	noarch
 BuildRequires:	pkgconfig(bash-completion)
 BuildRequires:	pkgconfig(python)

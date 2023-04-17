@@ -1,0 +1,45 @@
+From adf58f0c172dd8d5493ca5e8dead5ade23caf711 Mon Sep 17 00:00:00 2001
+From: Pavel Raiskup <praiskup@redhat.com>
+Date: Tue, 31 Jan 2023 08:14:58 +0100
+Subject: [PATCH] mock: don't use distutils copy_tree()
+
+Distutils are not a part of standard library, and being moved to
+setuptools where copy_tree() isn't exposed.  Using shutils.copytree()
+seems more standard (but we have to pre-create the dest dir).
+
+Resolves: rhbz#2165548
+---
+ mock/py/mockbuild/package_manager.py | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/mock/py/mockbuild/package_manager.py b/mock/py/mockbuild/package_manager.py
+index 3ab60e52d..060d27457 100644
+--- a/py/mockbuild/package_manager.py
++++ b/py/mockbuild/package_manager.py
+@@ -11,9 +11,6 @@
+ from textwrap import dedent
+ from configparser import ConfigParser
+ 
+-from distutils.dir_util import copy_tree
+-from distutils.errors import DistutilsFileError
+-
+ from . import file_util
+ from . import util
+ from .exception import BuildError, Error, YumError
+@@ -306,11 +303,12 @@ def copy_certs(self):
+         cert_paths = ["/etc/pki/ca-trust", "/usr/share/pki/ca-trust-source"]
+         for cert_path in cert_paths:
+             pki_dir = self.buildroot.make_chroot_path(cert_path)
++            file_util.mkdirIfAbsent(pki_dir)
+             try:
+-                copy_tree(cert_path, pki_dir)
+-            except DistutilsFileError:
+-                warning = "Couldn't copy certs from host, %s doesn't exist or is not readable"
+-                self.buildroot.root_log.debug(warning, cert_path)
++                shutil.copytree(cert_path, pki_dir)
++            except OSError as err:
++                warning = "Couldn't copy %s certs from host: %s"
++                self.buildroot.root_log.debug(warning, cert_path, str(err))
+ 
+         bundle_path = self.config['ssl_ca_bundle_path']
+         if bundle_path:

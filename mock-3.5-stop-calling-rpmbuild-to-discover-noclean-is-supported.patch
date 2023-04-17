@@ -1,0 +1,12 @@
+diff -Naur mock-3.5/py/mockbuild/backend.py mock-3.5.tpg/py/mockbuild/backend.py
+--- mock-3.5/py/mockbuild/backend.py	2022-12-01 12:39:30.000000000 +0000
++++ mock-3.5.tpg/py/mockbuild/backend.py	2023-04-17 14:55:18.857778644 +0000
+@@ -67,7 +67,7 @@
+         self.no_root_shells = config['no_root_shells']
+ 
+         self.private_network = not config['rpmbuild_networking']
+-        self.rpmbuild_noclean_option = None
++        self.rpmbuild_noclean_option = True
+ 
+     def _get_nspawn_args(self):
+         nspawn_args = []
