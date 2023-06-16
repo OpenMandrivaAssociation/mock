@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	4.0
+Version:	4.1
 Release:	1
 License:	GPLv2+
 Group:		Development/Other
