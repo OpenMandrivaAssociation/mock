@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	5.0
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -41,6 +41,7 @@ Requires:	python-requests
 Requires:	python-rpm
 Requires:	python-pyroute2
 Requires:	python-templated-dictionary
+Requires:	python-backoff
 Requires:	dnf
 Requires:	dnf-plugins-core
 Requires:	bsdtar
