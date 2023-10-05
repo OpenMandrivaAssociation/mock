@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	5.2
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -35,6 +35,7 @@ Patch4:		mock-3.5-stop-calling-rpmbuild-to-discover-noclean-is-supported.patch
 BuildArch:	noarch
 BuildRequires:	pkgconfig(bash-completion)
 BuildRequires:	pkgconfig(python)
+BuildRequires:	python-backoff
 Requires:	python-distro
 Requires:	python-jinja2
 Requires:	python-requests
@@ -42,15 +43,14 @@ Requires:	python-rpm
 Requires:	python-pyroute2
 Requires:	python-templated-dictionary
 Requires:	python-backoff
-Requires:	dnf
-Requires:	dnf-plugins-core
+Requires:	dnf5
 Requires:	bsdtar
 Requires:	pigz
 Requires:	sudo
 Requires:	distribution-gpg-keys
-Requires:	createrepo_c
+Suggests:	createrepo_c
 Requires:	systemd
-Recommends:	systemd-container
+Suggests:	systemd-container
 Requires:	procps-ng
 Requires:	util-linux
 Requires:	coreutils
