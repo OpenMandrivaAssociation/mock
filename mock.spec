@@ -9,8 +9,8 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	5.2
-Release:	2
+Version:	5.3
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -145,6 +145,10 @@ install -p -m 0644 docs/site-defaults.cfg %{buildroot}%{_pkgdocdir}
 
 sed -i 's/^_MOCK_NVR = None$/_MOCK_NVR = "%{name}-%{version}-%{release}"/' \
     %{buildroot}%{_libexecdir}/mock/mock
+
+# (tpg) in OMV we are not using autospec
+rm -rf %{buildroot}%{python_sitelib}/mockbuild/plugins/rpmautospec.*
+rm -rf %{python_sitelib}/mockbuild/plugins/__pycache__/rpmautospec.*.py*
 
 %pre
 # check for existence of mock group, create it if not found
