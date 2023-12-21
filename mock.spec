@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	5.3
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -150,10 +150,9 @@ sed -i 's/^_MOCK_NVR = None$/_MOCK_NVR = "%{name}-%{version}-%{release}"/' \
 rm -rf %{buildroot}%{python_sitelib}/mockbuild/plugins/rpmautospec.*
 rm -rf %{python_sitelib}/mockbuild/plugins/__pycache__/rpmautospec.*.py*
 
-%pre
-# check for existence of mock group, create it if not found
-getent group mock > /dev/null || groupadd -f -g %mockgid -r mock
-exit 0
+# Create the mock group
+mkdir -p %{buildroot}%{_sysusersdir}
+echo 'g mock %{mockgid} -' >%{buildroot}%{_sysusersdir}/mock.conf
 
 %files
 %license COPYING
@@ -166,6 +165,7 @@ exit 0
 %doc %{_pkgdocdir}/site-defaults.cfg
 %{_datadir}/bash-completion/completions/mock
 %{_datadir}/bash-completion/completions/mock-parse-buildlog
+%{_sysusersdir}/mock.conf
 
 %defattr(-, root, root)
 # executables
