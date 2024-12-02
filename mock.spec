@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	5.5
+Version:	5.9
 Release:	1
 License:	GPLv2+
 Group:		Development/Other
@@ -157,6 +157,7 @@ echo 'g mock %{mockgid} -' >%{buildroot}%{_sysusersdir}/mock.conf
 %files
 %license COPYING
 %dir %{_sysconfdir}/mock
+%config %{_sysconfdir}/mock/hermetic-build.cfg
 %dir %{_sysconfdir}/mock/eol
 %dir %{_sysconfdir}/mock/eol/templates
 %dir %{_sysconfdir}/mock/templates

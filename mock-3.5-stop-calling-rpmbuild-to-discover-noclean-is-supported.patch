@@ -1,12 +1,12 @@
-diff -Naur mock-3.5/py/mockbuild/backend.py mock-3.5.tpg/py/mockbuild/backend.py
---- mock-3.5/py/mockbuild/backend.py	2022-12-01 12:39:30.000000000 +0000
-+++ mock-3.5.tpg/py/mockbuild/backend.py	2023-04-17 14:55:18.857778644 +0000
-@@ -67,7 +67,7 @@
+diff -up mock-5.9/py/mockbuild/backend.py.4~ mock-5.9/py/mockbuild/backend.py
+--- mock-5.9/py/mockbuild/backend.py.4~	2024-12-02 07:55:32.076613414 +0100
++++ mock-5.9/py/mockbuild/backend.py	2024-12-02 07:56:04.346839299 +0100
+@@ -63,7 +63,7 @@ class Commands(object):
          self.no_root_shells = config['no_root_shells']
  
          self.private_network = not config['rpmbuild_networking']
 -        self.rpmbuild_noclean_option = None
 +        self.rpmbuild_noclean_option = "--noclean"
  
-     def _get_nspawn_args(self):
-         nspawn_args = []
+     @traceLog()
+     def backup_results(self):
