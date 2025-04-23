@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	5.9
+Version:	6.1
 Release:	1
 License:	GPLv2+
 Group:		Development/Other
@@ -111,7 +111,6 @@ install mockchain %{buildroot}%{_bindir}/mockchain
 install py/mock-parse-buildlog.py %{buildroot}%{_bindir}/mock-parse-buildlog
 install py/mock.py %{buildroot}%{_libexecdir}/mock/mock
 install -m755 %{SOURCE1} %{buildroot}%{_bindir}/mock
-install create_default_route_in_container.sh %{buildroot}%{_libexecdir}/mock/
 
 install -d %{buildroot}%{_sysconfdir}/pam.d
 cp -a etc/pam/* %{buildroot}%{_sysconfdir}/pam.d/
