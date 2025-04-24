@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	6.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -30,6 +30,7 @@ Patch3:		mock-3.3-no-invalid-decompressProgram.patch
 # (tpg) this crap was introduced jus to only check if some ancient rpmbuild supports --noclean option
 # https://github.com/rpm-software-management/mock/commit/cab12758da074e8af87189bd8f4a11c73a1f1ebf
 Patch4:		mock-3.5-stop-calling-rpmbuild-to-discover-noclean-is-supported.patch
+Patch5:		mock-6.1-default-dnf5.patch
 # (tpg) patches from upstream
 
 BuildArch:	noarch

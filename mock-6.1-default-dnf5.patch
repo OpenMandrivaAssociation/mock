@@ -1,0 +1,66 @@
+diff -up mock-6.1/docs/site-defaults.cfg.omv~ mock-6.1/docs/site-defaults.cfg
+--- mock-6.1/docs/site-defaults.cfg.omv~	2025-04-24 21:33:35.102697492 +0200
++++ mock-6.1/docs/site-defaults.cfg	2025-04-24 21:33:53.532970515 +0200
+@@ -96,7 +96,7 @@
+ # - 'dnf5' for DNF5 (C++) https://github.com/rpm-software-management/dnf5
+ #   The major version of DNF5 will remain '5' indefinitely, see #1271.
+ # - 'yum' for YUM https://github.com/rpm-software-management/yum
+-#config_opts['package_manager'] = 'dnf4'
++#config_opts['package_manager'] = 'dnf5'
+ 
+ # Number of attempts to execute package manager's action, and delay between
+ # attempts (seconds).  This is useful e.g. if the build is done against
+diff -up mock-6.1/py/mockbuild/config.py.omv~ mock-6.1/py/mockbuild/config.py
+--- mock-6.1/py/mockbuild/config.py.omv~	2025-04-24 21:29:45.109217456 +0200
++++ mock-6.1/py/mockbuild/config.py	2025-04-24 21:30:45.428268572 +0200
+@@ -328,7 +328,7 @@ def setup_default_config_opts():
+     config_opts['no_root_shells'] = False
+     config_opts['extra_chroot_dirs'] = []
+ 
+-    config_opts['package_manager'] = 'dnf'
++    config_opts['package_manager'] = 'dnf5'
+     config_opts['package_manager_max_attempts'] = 1
+     config_opts['package_manager_attempt_delay'] = 10
+ 
+@@ -645,7 +645,7 @@ def set_config_opts_per_cmdline(config_o
+         # using dnf. However, if config specifies its preference on either dnf
+         # or dnf5, respect that preference.
+         if config_opts['package_manager'] not in ['dnf', 'dnf5']:
+-            config_opts['package_manager'] = 'dnf'
++            config_opts['package_manager'] = 'dnf5'
+ 
+     if options.short_circuit:
+         config_opts['short_circuit'] = options.short_circuit
+diff -up mock-6.1/py/mockbuild/package_manager.py.omv~ mock-6.1/py/mockbuild/package_manager.py
+--- mock-6.1/py/mockbuild/package_manager.py.omv~	2025-04-24 21:31:58.155264999 +0200
++++ mock-6.1/py/mockbuild/package_manager.py	2025-04-24 21:33:25.499347662 +0200
+@@ -20,7 +20,7 @@ from .mounts import BindMountPoint
+ fallbacks = {
+     'dnf4': ['dnf4', 'dnf5', 'yum'],
+     'yum': ['yum', 'dnf4', 'dnf5'],
+-    'microdnf': ['microdnf', 'dnf4', 'dnf5', 'yum'],
++    'microdnf': ['microdnf', 'dnf5', 'dnf4', 'yum'],
+     'dnf5': ['dnf5', 'dnf4', 'yum'],
+ }
+ 
+@@ -55,7 +55,7 @@ def _package_manager_class_fallback(conf
+     desired = config_opts['package_manager']
+ 
+     if desired == 'dnf':  # backward compat
+-        desired = 'dnf4'
++        desired = 'dnf5'
+ 
+     if not fallback:
+         return _package_manager_from_string(desired)
+diff -up mock-6.1/py/mockbuild/plugins/package_state.py.omv~ mock-6.1/py/mockbuild/plugins/package_state.py
+--- mock-6.1/py/mockbuild/plugins/package_state.py.omv~	2025-04-24 21:31:16.902895489 +0200
++++ mock-6.1/py/mockbuild/plugins/package_state.py	2025-04-24 21:31:48.160206146 +0200
+@@ -52,7 +52,7 @@ class PackageState(object):
+                 self.state.start("Outputting list of available packages")
+                 out_file = self.buildroot.resultdir + '/available_pkgs.log'
+                 chrootpath = self.buildroot.make_chroot_path()
+-                if self.buildroot.config['package_manager'] in ['dnf', 'microdnf']:
++                if self.buildroot.config['package_manager'] in ['dnf5', 'dnf', 'microdnf']:
+                     cmd = "/usr/bin/dnf --installroot={0} repoquery -c {0}/etc/dnf/dnf.conf {1} | sort > {2}".format(
+                         chrootpath, repoquery_avail_opts, out_file)
+                 else:
