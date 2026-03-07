@@ -1,12 +1,12 @@
-diff -up mock-5.9/py/mockbuild/backend.py.4~ mock-5.9/py/mockbuild/backend.py
---- mock-5.9/py/mockbuild/backend.py.4~	2024-12-02 07:55:32.076613414 +0100
-+++ mock-5.9/py/mockbuild/backend.py	2024-12-02 07:56:04.346839299 +0100
-@@ -63,7 +63,7 @@ class Commands(object):
+diff -up mock-6.7/py/mockbuild/backend.py.4~ mock-6.7/py/mockbuild/backend.py
+--- mock-6.7/py/mockbuild/backend.py.4~	2026-03-03 12:39:58.000000000 +0100
++++ mock-6.7/py/mockbuild/backend.py	2026-03-06 21:36:27.076141714 +0100
+@@ -60,7 +60,7 @@ class Commands(object):
          self.no_root_shells = config['no_root_shells']
  
          self.private_network = not config['rpmbuild_networking']
 -        self.rpmbuild_noclean_option = None
 +        self.rpmbuild_noclean_option = "--noclean"
  
-     @traceLog()
-     def backup_results(self):
+         # on-demand buildroot properties
+         # spec path in buildroot

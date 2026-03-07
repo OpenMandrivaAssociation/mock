@@ -1,0 +1,21 @@
+diff -up mock-6.7/py/mockbuild/config.py.omv~ mock-6.7/py/mockbuild/config.py
+--- mock-6.7/py/mockbuild/config.py.omv~	2026-03-06 21:53:49.372467934 +0100
++++ mock-6.7/py/mockbuild/config.py	2026-03-06 21:54:17.990445826 +0100
+@@ -368,14 +368,14 @@ def setup_default_config_opts():
+     config_opts['dnf4_command'] = '/usr/bin/dnf-3'
+     config_opts['dnf4_system_command'] = '/usr/bin/dnf-3'
+     config_opts['dnf4_common_opts'] = ['--setopt=deltarpm=False', '--setopt=allow_vendor_change=yes', '--allowerasing']
+-    config_opts['dnf4_install_command'] = 'install python3-dnf python3-dnf-plugins-core'
++    config_opts['dnf4_install_command'] = 'install dnf dnf-plugins-core'
+     config_opts['dnf4_disable_plugins'] = ['local', 'spacewalk', 'versionlock']
+     config_opts["dnf4_avoid_opts"] = {}
+ 
+     config_opts['dnf5_command'] = '/usr/bin/dnf5'
+-    config_opts['dnf5_system_command'] = '/usr/bin/dnf5'
++    config_opts['dnf5_system_command'] = '/usr/bin/dnf'
+     config_opts['dnf5_common_opts'] = ['--setopt=deltarpm=False', '--setopt=allow_vendor_change=yes', '--allowerasing']
+-    config_opts['dnf5_install_command'] = 'install dnf5 dnf5-plugins'
++    config_opts['dnf5_install_command'] = 'install dnf'
+     config_opts['dnf5_disable_plugins'] = []
+     # No --allowerasing with remove, per
+     # https://github.com/rpm-software-management/dnf5/issues/729

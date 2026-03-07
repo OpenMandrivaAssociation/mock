@@ -9,7 +9,7 @@
 
 Summary:	Builds packages inside chroots
 Name:		mock
-Version:	6.6
+Version:	6.7
 Release:	1
 License:	GPL-2.0-or-later
 Group:		Development/Other
@@ -23,6 +23,7 @@ Source0:	https://github.com/rpm-software-management/mock/releases/download/mock-
 # (tpg) use sudo these days, especially when /sbin got merged with /bin
 Source1:	mock.wrapper
 Patch0:		mock-1.4.16-dnf-clean-all-on-builddep-failure.patch
+Patch1:		mock-6.7-om-is-not-fedora.patch
 # Our /usr/bin/tar is bsdtar
 Patch2:		mock-3.3-default-bsdtar.patch
 # Appending "-d" to an empty compressProgram is a stupid idea
