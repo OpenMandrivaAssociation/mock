@@ -10,7 +10,7 @@
 Summary:	Builds packages inside chroots
 Name:		mock
 Version:	6.7
-Release:	1
+Release:	2
 License:	GPL-2.0-or-later
 Group:		Development/Other
 URL:		https://github.com/rpm-software-management/mock/
@@ -32,6 +32,7 @@ Patch3:		mock-3.3-no-invalid-decompressProgram.patch
 # https://github.com/rpm-software-management/mock/commit/cab12758da074e8af87189bd8f4a11c73a1f1ebf
 Patch4:		mock-3.5-stop-calling-rpmbuild-to-discover-noclean-is-supported.patch
 Patch5:		mock-6.1-default-dnf5.patch
+Patch6:		mock-6.7-pkgid-is-gone.patch
 # (tpg) patches from upstream
 
 BuildArch:	noarch

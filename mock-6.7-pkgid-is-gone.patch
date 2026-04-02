@@ -1,0 +1,12 @@
+diff -up mock-6.7/py/mockbuild/plugins/package_state.py.omv~ mock-6.7/py/mockbuild/plugins/package_state.py
+--- mock-6.7/py/mockbuild/plugins/package_state.py.omv~	2026-04-02 14:18:11.822494634 +0200
++++ mock-6.7/py/mockbuild/plugins/package_state.py	2026-04-02 14:36:52.817329051 +0200
+@@ -17,7 +17,7 @@ import mockbuild.util
+ 
+ # repoquery used
+ repoquery_avail_opts = \
+-    "--qf '%{name}-%{epoch}:%{version}-%{release}.%{arch} %{buildtime} %{size} %{pkgid} %{repoid}' '*'"
++    "--qf '%{name}-%{epoch}:%{version}-%{release}.%{arch} %{buildtime} %{size} %{hdrsha256} %{repoid}' '*'"
+ 
+ # set up logging, module options
+ requires_api_version = "1.1"
