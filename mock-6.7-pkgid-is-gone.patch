@@ -1,6 +1,6 @@
-diff -up mock-6.7/py/mockbuild/plugins/package_state.py.omv~ mock-6.7/py/mockbuild/plugins/package_state.py
---- mock-6.7/py/mockbuild/plugins/package_state.py.omv~	2026-04-02 14:18:11.822494634 +0200
-+++ mock-6.7/py/mockbuild/plugins/package_state.py	2026-04-02 14:36:52.817329051 +0200
+diff -up mock-6.7/py/mockbuild/plugins/package_state.py.7~ mock-6.7/py/mockbuild/plugins/package_state.py
+--- mock-6.7/py/mockbuild/plugins/package_state.py.7~	2026-04-12 00:26:40.930400193 +0200
++++ mock-6.7/py/mockbuild/plugins/package_state.py	2026-04-12 00:27:20.706404351 +0200
 @@ -17,7 +17,7 @@ import mockbuild.util
  
  # repoquery used
@@ -10,3 +10,12 @@ diff -up mock-6.7/py/mockbuild/plugins/package_state.py.omv~ mock-6.7/py/mockbui
  
  # set up logging, module options
  requires_api_version = "1.1"
+@@ -71,7 +71,7 @@ class PackageState(object):
+         self.state.start("Outputting list of installed packages")
+ 
+         try:
+-            cmd = "rpm -qa --root '%s' --qf '%%{nevra} %%{buildtime} %%{size} %%{pkgid} installed\\n'" % (
++            cmd = "rpm -qa --root '%s' --qf '%%{nevra} %%{buildtime} %%{size} %%{hdrsha256} installed\\n'" % (
+                 self.buildroot.make_chroot_path())
+             with self.buildroot.uid_manager:
+                 output, _ = self.buildroot.doOutChroot(cmd, returnOutput=1, shell=True)
